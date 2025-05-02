@@ -1,0 +1,19 @@
+CREATE TABLE ERRORLOGS (
+	[Id] INT PRIMARY KEY IDENTITY (1,1),
+	[Title] NVARCHAR (255),
+	[Message] NVARCHAR(MAX),
+	[StackTrace] NVARCHAR(MAX),
+	[Source] NVARCHAR(255),
+	[DateCreated] DATETIME
+)
+CREATE TABLE Users(
+	[Id] INT  PRIMARY KEY IDENTITY(1,1),
+	Email NVARCHAR (255) NOT NULL UNIQUE,
+	PasswordHash NVARCHAR(44) NOT NULL,
+	FirstName NVARCHAR(100)NULL,
+	LastName NVARCHAR (100) NULL,
+	Birthdate Date NULL,
+	ProfilePicture NVARCHAR (500) NULL,
+	USERTYPE INT NOT NULL-- 1:Regular,2:Admin,3:Master
+	)
+
