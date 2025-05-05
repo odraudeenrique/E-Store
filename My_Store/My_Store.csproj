@@ -13,7 +13,6 @@
 
   <ItemGroup>
     <Folder Include="Infrastructure\DBScripts\" />
-    <Folder Include="Application\" />
   </ItemGroup>
 
 </Project>

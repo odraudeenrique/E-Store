@@ -17,7 +17,7 @@ namespace My_Store.Models.UserModels
 
         [Required] public string Email { get { return _email; } set { _email = value; } }
         private string _password;
-        [Required] private string Password { get { return _password; }  set { _password = value; } }
+        [Required] public string Password { get { return _password; }  set { _password = value; } }
 
         private string _firstname;
         public string Firstname { get { return _firstname; } set { _firstname = value; } }
@@ -88,11 +88,6 @@ namespace My_Store.Models.UserModels
 
             }
         }
-
-
-
-
-
 
     }
 }

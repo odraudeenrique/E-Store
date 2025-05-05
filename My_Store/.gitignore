@@ -12,6 +12,7 @@ publish/
 
 ## VS Code settings
 .vscode/
+.vs/
 
 ## Runtime files
 *.log

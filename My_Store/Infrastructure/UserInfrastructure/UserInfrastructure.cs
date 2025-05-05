@@ -3,11 +3,12 @@ using My_Store.Models.UserModels    ;
 using My_Store.Shared.Helper;
 using My_Store.Infrastructure.DataAccessInfrastructure;
 using My_Store.Infrastructure.ErrorInfrastructure;
+using My_Store.Infrastructure.Interfaces;
 
 
 namespace My_Store.Infrastructure.UserInfrastructure
 {
-    public class UserInfrastructure
+    public class UserInfrastructure : IRepository<User>
     {
         private DataAccess _data;
         DataAccess data = new DataAccess();
@@ -19,10 +20,11 @@ namespace My_Store.Infrastructure.UserInfrastructure
         }
 
 
-        public void CreateUser(string Email, string Pass)
+        public void Create(User User)
         {
-            Result<string> AuxEmail = Helper.ToValidateIfStringValid(Email);
-            Result<string> AuxPassword = Helper.ToValidateIfStringValid(Pass);
+            
+            Result<string> AuxEmail = Helper.ToValidateIfStringValid(User.Email);
+            Result<string> AuxPassword = Helper.ToValidateIfStringValid(User.Password);
 
             if (!AuxEmail.IsValid || !AuxPassword.IsValid)
             {
@@ -44,6 +46,9 @@ namespace My_Store.Infrastructure.UserInfrastructure
                 ErrorLogger.LogToDatabase(Error);
                 throw;
             }
+        }
+        public void Update(User User)
+        {
 
         }
     }

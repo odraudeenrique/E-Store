@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using My_Store.Models.UserModels;
+using My_Store.Services.UserServices;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -8,6 +10,14 @@ namespace My_Store.Controllers.User
     [ApiController]
     public class UsersController : ControllerBase
     {
+        private readonly IService<UserDTO> _userService;
+
+        public UsersController()
+        {
+            _userService = new UserService();
+        }
+
+
         // GET: api/<UserController>
         [HttpGet]
         public IEnumerable<string> Get()
@@ -24,8 +34,23 @@ namespace My_Store.Controllers.User
 
         // POST api/<UserController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public IActionResult Post([FromBody] UserDTO User)
         {
+
+            try
+            {
+                if (User == null)
+                {
+                    return BadRequest("The user is null");
+                }
+
+
+                _userService.Create(User);
+                return Ok("User registered succesfully");
+            }catch (Exception ex)
+            {
+                return StatusCode(500, "Internal server error: " + ex.Message);
+            }
         }
 
         // PUT api/<UserController>/5
