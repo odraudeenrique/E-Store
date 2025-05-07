@@ -1,4 +1,4 @@
-﻿namespace My_Store.Shared
+﻿namespace My_Store.Shared.Helper
 {
     public class Result<T>
     {
@@ -11,15 +11,15 @@
         private T? _value;
         public T? Value
         {
-            get { return this._value; }
-            private set { this._value = value; }
+            get { return _value; }
+            private set { _value = value; }
         }
         private string? _error;
         public string? Error
         {
 
-            get { return this._error; }
-            private set { this._error = value; }
+            get { return _error; }
+            private set { _error = value; }
 
         }
 

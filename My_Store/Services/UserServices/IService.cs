@@ -2,7 +2,7 @@
 {
     public interface IService <in T> where T : class
     {
-        void Create(T entity);  
+        Task Create(T entity);  
         void Update(T entity);
       
     }

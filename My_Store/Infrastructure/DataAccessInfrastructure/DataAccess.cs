@@ -1,5 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
-using My_Store.Shared;
+using System.Threading.Tasks;
+using System.Data;
 using Microsoft.Extensions.Configuration;
 using System.IO;
 using My_Store.Shared.Helper;
@@ -8,7 +9,7 @@ using My_Store.Shared.Helper;
 
 namespace My_Store.Infrastructure.DataAccessInfrastructure
 {
-    public class DataAccess : IDisposable
+    public class DataAccess : IAsyncDisposable
     {
         private SqlConnection Connection { get; set; }
         private SqlCommand Command { get; set; }
@@ -79,7 +80,7 @@ namespace My_Store.Infrastructure.DataAccessInfrastructure
 
 
 
-        public SqlDataReader ToRead()
+        public async Task<SqlDataReader> ToRead()
         {
             if (Connection == null || Command == null)
             {
@@ -89,8 +90,8 @@ namespace My_Store.Infrastructure.DataAccessInfrastructure
             Command.Connection = Connection;
             try
             {
-                Connection.Open();
-                Reader = Command.ExecuteReader(System.Data.CommandBehavior.CloseConnection);
+                await Connection.OpenAsync();
+                Reader = await Command.ExecuteReaderAsync(System.Data.CommandBehavior.CloseConnection);
                 return Reader;
             }
             catch
@@ -101,14 +102,13 @@ namespace My_Store.Infrastructure.DataAccessInfrastructure
             {
                 if (Reader == null)
                 {
-                    Dispose();
+                    DisposeAsync();
                 }
             }
 
         }
 
-
-        public void ToExecute()
+        public async Task ToExecute()
         {
             if (Connection == null || Command == null)
             {
@@ -118,8 +118,8 @@ namespace My_Store.Infrastructure.DataAccessInfrastructure
             Command.Connection = Connection;
             try
             {
-                Connection.Open();
-                Command.ExecuteNonQuery();
+                await Connection.OpenAsync();
+                await Command.ExecuteNonQueryAsync();
             }
             catch
             {
@@ -127,16 +127,17 @@ namespace My_Store.Infrastructure.DataAccessInfrastructure
             }
             finally
             {
-                Dispose();
+                DisposeAsync();
             }
         }
 
 
-        public int ToExecuteScalarInt()
+        public async Task<int> ToExecuteScalarInt()
         {
+            const int InvalidValue = -1;
+
             if (Connection == null || Command == null)
             {
-                int InvalidValue = -1;
                 return InvalidValue;
             }
 
@@ -144,8 +145,12 @@ namespace My_Store.Infrastructure.DataAccessInfrastructure
             Command.Connection = Connection;
             try
             {
-                Connection.Open();
-                return int.Parse(Command.ExecuteScalar().ToString());
+                await Connection.OpenAsync();
+                var Scalar = await Command.ExecuteScalarAsync();
+                int Aux = InvalidValue;
+                int.TryParse(Scalar?.ToString(), out Aux);
+                
+                return Aux>0 ? Aux : InvalidValue;
 
             }
             catch
@@ -154,25 +159,27 @@ namespace My_Store.Infrastructure.DataAccessInfrastructure
             }
             finally
             {
-                Dispose();
+                DisposeAsync();
             }
         }
 
-        public string ToExecuteScalarString()
+        public async Task<string> ToExecuteScalarString()
         {
+            const string InvalidValue = "";
+
             if (Connection == null || Command == null)
             {
-                string InvalidValue = "";
                 return InvalidValue;
             }
-
+            
 
             Command.Connection = Connection;
             try
             {
-                Connection.Open();
-                string QueryResult = Command.ExecuteScalar().ToString();
-                return QueryResult != null ? QueryResult : "";
+                await Connection.OpenAsync();
+                var  Scalar = await Command.ExecuteScalarAsync();
+                
+                return Scalar != null ? Scalar.ToString() : InvalidValue;
 
             }
             catch
@@ -181,23 +188,23 @@ namespace My_Store.Infrastructure.DataAccessInfrastructure
             }
             finally
             {
-                Dispose();
+                DisposeAsync();
             }
         }
 
-        public void Dispose()
+        public async ValueTask DisposeAsync()
         {
             if (Reader != null)
             {
-                Reader.Close();
+                await Reader.CloseAsync();
             }
             if (Command != null)
             {
-                Command.Dispose();
+                await Command.DisposeAsync();
             }
             if (Connection != null)
             {
-                Connection.Close();
+                await Connection.CloseAsync();
             }
         }
 

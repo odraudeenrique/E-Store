@@ -1,4 +1,5 @@
 ﻿using My_Store.Models.MeasureModels;
+using My_Store.Models.UserModels;
 
 namespace My_Store.Shared.Helper
 {
@@ -80,7 +81,19 @@ namespace My_Store.Shared.Helper
             return Result<Weight>.Successful(Weight);
         }
 
+        public static Result<User> ToValidateUser(string Email, string Password)
+        {
+            Result<string> ValidatedEmail = ToValidateIfStringValid(Email);
+            Result<string> ValidatePassword = ToValidateIfStringValid(Password);
 
+            if ((!ValidatedEmail.IsValid) || (!ValidatePassword.IsValid))
+            {
+                return Result<User>.Failed("The email or the password is not valid ");
+            }
+            User User = new User(ValidatedEmail.Value, ValidatePassword.Value);
+            return Result<User>.Successful(User);
+
+        }
     }
 }
 

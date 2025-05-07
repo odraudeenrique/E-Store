@@ -1,19 +1,19 @@
-﻿namespace My_Store.Shared
+﻿namespace My_Store.Shared.Helper
 {
-    public  class ErrorInfo
+    public class ErrorInfo
     {
         private readonly string _id;
-        private string Id { get { return this._id; } }
+        private string Id { get { return _id; } }
         private string _tittle;
-        public string Tittle {  get { return this._tittle; } private set { this._tittle = value; } }
+        public string Tittle { get { return _tittle; } private set { _tittle = value; } }
         private string _message;
-        public string Message { get { return this._message; } private set { this._message = value; } }
+        public string Message { get { return _message; } private set { _message = value; } }
         private string _stackTrace;
-        public string StackTrace { get { return this._stackTrace; } private set { this._stackTrace = value; } }
+        public string StackTrace { get { return _stackTrace; } private set { _stackTrace = value; } }
         private string _source;
-        public string Source { get { return this._source; } private set { this._source = value; } }
+        public string Source { get { return _source; } private set { _source = value; } }
         private DateTime _dateCreated;
-        public DateTime DateCreated{ get { return this._dateCreated; }}
+        public DateTime DateCreated { get { return _dateCreated; } }
 
         private ErrorInfo() { }
 

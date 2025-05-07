@@ -1,5 +1,4 @@
-﻿using My_Store.Shared;
-using My_Store.Models.UserModels    ;
+﻿using My_Store.Models.UserModels;
 using My_Store.Shared.Helper;
 using My_Store.Infrastructure.DataAccessInfrastructure;
 using My_Store.Infrastructure.ErrorInfrastructure;
@@ -11,8 +10,7 @@ namespace My_Store.Infrastructure.UserInfrastructure
     public class UserInfrastructure : IRepository<User>
     {
         private DataAccess _data;
-        DataAccess data = new DataAccess();
-        private DataAccess Data { get { return _data; } set { _data = value; } }
+        private DataAccess Data { get { return this._data; } set { this._data = value; } }
 
         public UserInfrastructure()
         {
@@ -20,25 +18,26 @@ namespace My_Store.Infrastructure.UserInfrastructure
         }
 
 
-        public void Create(User User)
+        public async Task<int> Create(User User)
         {
             
             Result<string> AuxEmail = Helper.ToValidateIfStringValid(User.Email);
             Result<string> AuxPassword = Helper.ToValidateIfStringValid(User.Password);
-
             if (!AuxEmail.IsValid || !AuxPassword.IsValid)
             {
-                return;
+                const int InvalidValue = -1;
+                return InvalidValue;
             }
 
             try
             {
-                Data.ToSetProcedure("StoredToCreateUse");
+                Data.ToSetProcedure("StoredToCreateUser");
                 Data.ToSetParameters("@Email", AuxEmail.Value);
                 Data.ToSetParameters("@Password", AuxPassword.Value);
 
 
-                string UserStatus = Data.ToExecuteScalarString();
+                int UserStatus = await Data.ToExecuteScalarInt();
+                return UserStatus;
             }
             catch (Exception ex)
             {

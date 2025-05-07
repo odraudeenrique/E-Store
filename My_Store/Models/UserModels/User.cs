@@ -1,93 +1,52 @@
-﻿using My_Store.Shared;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 using System.Text;
 using Microsoft.AspNetCore.Components.Web;
 using System.ComponentModel.DataAnnotations;
 using My_Store.Shared.Helper;
 using My_Store.Infrastructure.ErrorInfrastructure;
+using My_Store.Shared.SecurityHelper;
 
 namespace My_Store.Models.UserModels
 {
     public class User
     {
         private string _id;
-        public string Id { get { return _id; } }
+        public string Id { get { return this._id; } }
 
         private string _email;
 
-        [Required] public string Email { get { return _email; } set { _email = value; } }
+        [Required] public string Email { get { return this._email; } set { this._email = value; } }
         private string _password;
-        [Required] public string Password { get { return _password; }  set { _password = value; } }
+        [Required] public string Password { get { return this._password; }  set { this._password = value; } }
 
         private string _firstname;
-        public string Firstname { get { return _firstname; } set { _firstname = value; } }
+        public string Firstname { get { return this._firstname; } set { this._firstname = value; } }
         private string _lastName;
-        public string LastName { get { return _lastName; } set { _lastName = value; } }
+        public string LastName { get { return this._lastName; } set { this._lastName = value; } }
         private DateTime _birthday;
-        public DateTime Birthday { get { return _birthday; } set { _birthday = value; } }
+        public DateTime Birthday { get { return this._birthday; } set { this._birthday = value; } }
         private string _profilePicture;
-        public string ProfilePicture { get { return _profilePicture; } set { _profilePicture = value; } }
+        public string ProfilePicture { get { return this._profilePicture; } set { this._profilePicture = value; } }
         private TypeOfUser _userType;
-        public TypeOfUser UserType { get { return _userType; } set { _userType = value; } }
+        public TypeOfUser UserType { get { return this._userType; } set { this._userType = value; } }
 
 
 
         public User(string Email, string Password)
         {
             Result<string> AuxEmail = Helper.ToValidateIfStringValid(Email);
-            Result<string> AuxPassword = Helper.ToValidateIfStringValid(Password);
+            string PasswordHash= SecurityHelper.ToGetPasswordHash(Password);
+          
 
-            if (!AuxEmail.IsValid || !AuxPassword.IsValid)
+            if (!AuxEmail.IsValid || string.IsNullOrEmpty(PasswordHash))
             {
-                throw new ArgumentException();
+                throw new ArgumentException("Empty Email, or Password");
             }
 
-            this.Email = Email;
-            this.Password = ToSetPasswordHash(Password);
+            this.Email = AuxEmail.Value;
+            this.Password = PasswordHash;
 
-        }
-
-
-        public string ToSetPasswordHash(string Pass)
-        {
-            Result<string> Aux = Helper.ToValidateIfStringValid(Pass);
-
-            if (!Aux.IsValid)
-            {
-                return "";
-            }
-
-            string Hash = ToGetdHash(Aux.Value);
-            return !string.IsNullOrEmpty(Hash) ? Hash : "";
-        }
-
-        public string ToGetdHash(string Pass)
-        {
-            Result<string> Aux = Helper.ToValidateIfStringValid(Pass);
-
-
-            if (!Aux.IsValid)
-            {
-                return "";
-            }
-
-            try
-            {
-                using (SHA256 sha256 = SHA256.Create())
-                {
-                    byte[] OriginalPasswordToHash = Encoding.UTF8.GetBytes(Aux.Value);
-                    byte[] HashPassword = sha256.ComputeHash(OriginalPasswordToHash);
-                    return Convert.ToBase64String(HashPassword);
-                }
-            }
-            catch (Exception ex)
-            {
-                ErrorInfo Error = ErrorInfo.FromException(ex);
-                ErrorLogger.LogToDatabase(Error);
-                throw;
-
-            }
-        }
+        }  
 
     }
 }
