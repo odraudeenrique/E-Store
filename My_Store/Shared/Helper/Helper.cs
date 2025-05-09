@@ -1,97 +1,135 @@
 ﻿using My_Store.Models.MeasureModels;
 using My_Store.Models.UserModels;
+using My_Store.Shared.SecurityHelper;
+using System.Runtime.CompilerServices;
+
 
 namespace My_Store.Shared.Helper
 {
     public static class Helper
     {
-        private static bool IsMayorThanZero<T>(T Value)
+        public static Result<T> IsGreaterThanZero<T>(T Value)
         {
             try
             {
-                decimal number = Convert.ToDecimal(Value);
-                return number >= 0 ? true : false;
+                decimal Number = Convert.ToDecimal(Value);
+
+                if (!(Number > 0))
+                {
+                    return Result<T>.Failed("The number is minor than zero");
+                }
+
+                return  Result<T>.Successful(Value);    
             }
             catch (InvalidCastException)
             {
-                return false;
+                return Result<T>.Failed("The convertion failed");
             }
             catch (FormatException)
             {
-                return false;
+                return Result<T>.Failed("The format is invalid");
             }
             catch (OverflowException)
             {
-                return false;
+                return Result<T>.Failed("Overflow exception");
             }
         }
-        private static bool ToValidateString(string Text)
+
+        public static Result<string> ToValidateString(string Text)
         {
+            
+
             if (string.IsNullOrEmpty(Text))
             {
-                return false;
+                return Result<string>.Failed("The string is empty");
             }
-            return true;
-
-        }
-
-
-        public static Result<T> ToValidateNumberMayorThanZero<T>(T Number)
-        {
-            if (IsMayorThanZero(Number))
-            {
-                return Result<T>.Successful(Number);
-
-            }
-            else
-            {
-                return Result<T>.Failed("Something wrong happened; please try again");
-            }
-
-        }
-        public static Result<string> ToValidateIfStringValid(string Text)
-        {
-            if (!ToValidateString(Text))
-            {
-                return Result<string>.Failed("The string is not valid");
-            }
-
             return Result<string>.Successful(Text);
+
         }
 
-        public static Result<Dimension> ToValidateDimension(Dimension Dimension)
+        public static Result<(float Depth, float Width, float Height)> ToValidateDimension(Dimension Dimension)
         {
+            Result<float> ValidatedDepth= IsGreaterThanZero(Dimension.Depth);
+            Result<float>ValidatedWidth= IsGreaterThanZero(Dimension.Width);
+            Result<float>ValidatedHeight= IsGreaterThanZero(Dimension.Height);
 
-            if (!(IsMayorThanZero(Dimension.Depth) && IsMayorThanZero(Dimension.Width) && IsMayorThanZero(Dimension.Height)))
+            if (!ValidatedDepth.IsValid)
             {
-                return Result<Dimension>.Failed("One of the values is not greater than zero");
+                return Result<(float,float,float)>.Failed("The Depth is minor than zero");
             }
+            if (!ValidatedWidth.IsValid)
+            {
+                return Result<(float, float, float)>.Failed("The width is minor than zero");
+            }
+            if (!ValidatedHeight.IsValid)
+            {
+                return Result<(float, float, float)>.Failed("The Height is minor than zero");
+            }
+           
 
+            return Result<(float,float,float)>.Successful((ValidatedDepth.Value,ValidatedWidth.Value,ValidatedHeight.Value));
 
-            return Result<Dimension>.Successful(Dimension);
+          
         }
 
-        public static Result<Weight> ToValidateWeight(Weight Weight)
+        public static Result<(float WeightNumber, string WeightUnit )> ToValidateWeight(Weight Weight)
         {
-            if (IsMayorThanZero(Weight.WeightNumber) && ToValidateString(Weight.WeightUnit))
+            Result<float> ValidatedWeightNumber = IsGreaterThanZero(Weight.WeightNumber);
+            Result<string> ValidatedWeightUnit=ToValidateString(Weight.WeightUnit);
+
+            if (!ValidatedWeightNumber.IsValid)
             {
-                return Result<Weight>.Failed("One of the values is not valid");
+                return Result<(float, string)>.Failed("The weight number is minor than zero");
+            }
+            if (!ValidatedWeightUnit.IsValid)
+            {
+                return Result<(float, string)>.Failed("The weight unit is not valid");
             }
 
-            return Result<Weight>.Successful(Weight);
+            return Result<(float,string)>.Successful((ValidatedWeightNumber.Value,ValidatedWeightUnit.Value));
+
         }
 
-        public static Result<User> ToValidateUser(string Email, string Password)
+        public static Result<(string UserEmail,string PasswordHash)> ToValidateUserCredentials(string Email, string Password)
         {
-            Result<string> ValidatedEmail = ToValidateIfStringValid(Email);
-            Result<string> ValidatePassword = ToValidateIfStringValid(Password);
+            Result<string> ValidatedEmail = ToValidateString(Email);
+            Result<string> ValidatedPassword = ToValidateString(Password);
 
-            if ((!ValidatedEmail.IsValid) || (!ValidatePassword.IsValid))
+            if (!ValidatedEmail.IsValid)
             {
-                return Result<User>.Failed("The email or the password is not valid ");
+                return Result<(string, string)>.Failed("The email is not valid");
             }
-            User User = new User(ValidatedEmail.Value, ValidatePassword.Value);
-            return Result<User>.Successful(User);
+            if (!ValidatedPassword.IsValid)
+            {
+                return Result<(string, string)>.Failed("The password is not valid");
+            }
+
+            if((ValidatedPassword.IsValid) && (ValidatedPassword.Value.Length < 8))
+            {
+                return Result<(string, string)>.Failed("The password must have 8 or more characteres");
+            }
+
+            string HashPassword = SecurityHelper.SecurityHelper.ToGetPasswordHash(ValidatedPassword.Value);
+
+            return Result<(string, string)>.Successful((ValidatedEmail.Value, HashPassword));
+
+        }
+        public static Result<string>ToValidateUserCredentials(string Password)
+        {
+            Result<string> ValidatedPassword = ToValidateString(Password);
+            if (!ValidatedPassword.IsValid)
+            {
+                return Result<string>.Failed("The password field is empty ");
+            }
+            if ((ValidatedPassword.IsValid) && (ValidatedPassword.Value.Length < 8))
+            {
+                return Result<string>.Failed("The password must have 8 or more characteres");
+            }
+
+            string HashPassword = SecurityHelper.SecurityHelper.ToGetPasswordHash(ValidatedPassword.Value);
+
+            return Result<string>.Successful(HashPassword);
+
 
         }
     }

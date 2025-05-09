@@ -20,10 +20,10 @@ namespace My_Store.Infrastructure.UserInfrastructure
 
         public async Task<int> Create(User User)
         {
+            Result<(string Email, string Password)> UserCredentials = Helper.ToValidateUserCredentials(User.Email, User.Password);
+
             
-            Result<string> AuxEmail = Helper.ToValidateIfStringValid(User.Email);
-            Result<string> AuxPassword = Helper.ToValidateIfStringValid(User.Password);
-            if (!AuxEmail.IsValid || !AuxPassword.IsValid)
+            if (!UserCredentials.IsValid)
             {
                 const int InvalidValue = -1;
                 return InvalidValue;
@@ -32,8 +32,8 @@ namespace My_Store.Infrastructure.UserInfrastructure
             try
             {
                 Data.ToSetProcedure("StoredToCreateUser");
-                Data.ToSetParameters("@Email", AuxEmail.Value);
-                Data.ToSetParameters("@Password", AuxPassword.Value);
+                Data.ToSetParameters("@Email", UserCredentials.Value.Email);
+                Data.ToSetParameters("@Password", UserCredentials.Value.Password);
 
 
                 int UserStatus = await Data.ToExecuteScalarInt();

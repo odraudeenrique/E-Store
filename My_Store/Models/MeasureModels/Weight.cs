@@ -25,40 +25,48 @@ namespace My_Store.Models.MeasureModels
 
         private void ToCreateWeight(float WeightNumber, string WeightUnit)
         {
-            Result<float> AuxNumber = Helper.ToValidateNumberMayorThanZero(WeightNumber);
-            this.WeightNumber = AuxNumber.IsValid ? AuxNumber.Value : 0;
+            Result<float> AuxNumber = Helper.IsGreaterThanZero(WeightNumber);
+            Result<string> AuxUnit = Helper.ToValidateString(WeightUnit);
 
-            Result<string> AuxUnit = Helper.ToValidateIfStringValid(WeightUnit);
+            if (!AuxNumber.IsValid)
+            {
+                return;
+            }
 
-            if (ToGetUnit(AuxUnit.Value) != "" && AuxUnit.IsValid)
+            if ((!ToGetUnit(AuxUnit.Value)) && (AuxUnit.IsValid))
             {
-                this.WeightUnit = AuxUnit.Value;
+                return;
             }
-            else
-            {
-                this.WeightUnit = "";
-            }
+            this.WeightUnit = AuxUnit.Value;
+            this.WeightNumber = AuxNumber.Value;
 
 
         }
-        private string ToGetUnit(string Unit)
+        private bool ToGetUnit(string Unit)
         {
             switch (Unit)
             {
                 case "lb":
-                    return Unit;
+                    this.WeightUnit = "lb";
+                    return true;
                 case "oz":
-                    return Unit;
+                    this.WeightUnit = "oz";
+                    return true;
                 case "ton":
-                    return Unit;
+                    this.WeightUnit = "ton";
+                    return true;
                 case "long ton":
-                    return Unit;
+                    this.WeightUnit = "long ton";
+                    return true;
                 case "kg":
-                    return Unit;
+                    this.WeightUnit = "kg";
+                    return true;
                 case "g":
-                    return Unit;
+                    this.WeightUnit = "g";
+                    return true;
                 default:
-                    return "";
+                    this.WeightUnit = "";
+                    return false;
             }
 
         }

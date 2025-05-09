@@ -9,7 +9,7 @@ namespace My_Store.Shared.SecurityHelper
     {
         public static string ToGetPasswordHash(string Password)
         {
-            Result<string> Aux = Helper.ToValidateIfStringValid(Password);
+            Result<string> Aux = Helper.Helper.ToValidateString(Password);
 
             if (!Aux.IsValid)
             {

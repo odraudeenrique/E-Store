@@ -36,14 +36,19 @@ namespace My_Store.Models.MeasureModels
 
         private void ToCreateDimension(float Depth, float Width, float Height)
         {
+            Result<float> ValidatedDepth = Helper.IsGreaterThanZero(Depth);
+            Result<float> ValidatedWidth = Helper.IsGreaterThanZero(Width);
+            Result<float> ValidatedHeight = Helper.IsGreaterThanZero(Height);
 
-            Result<float> AuxDepth = Helper.ToValidateNumberMayorThanZero(Depth);
-            Result<float> AuxWidth = Helper.ToValidateNumberMayorThanZero(Width);
-            Result<float> AuxHeight = Helper.ToValidateNumberMayorThanZero(Height);
-
-            this.Depth = AuxDepth.IsValid ? AuxDepth.Value : 0;
-            this.Width = AuxWidth.IsValid ? AuxWidth.Value : 0;
-            this.Height = AuxHeight.IsValid ? AuxHeight.Value : 0;
+            if ((!ValidatedDepth.IsValid) || (!ValidatedWidth.IsValid) || (!ValidatedHeight.IsValid))
+            {
+                this.Depth = 0;
+                this.Width = 0;
+                this.Height = 0;
+            }
+            this.Depth = ValidatedDepth.Value;
+            this.Width = ValidatedWidth.Value;
+            this.Height = ValidatedHeight.Value;
 
         }
 

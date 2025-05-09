@@ -34,16 +34,17 @@ namespace My_Store.Models.UserModels
 
         public User(string Email, string Password)
         {
-            Result<string> AuxEmail = Helper.ToValidateIfStringValid(Email);
-            string PasswordHash= SecurityHelper.ToGetPasswordHash(Password);
-          
 
-            if (!AuxEmail.IsValid || string.IsNullOrEmpty(PasswordHash))
+            Result<(string Email, string Password)> ValidatedUserCredentials=Helper.ToValidateUserCredentials(Email, Password);
+
+            if (!ValidatedUserCredentials.IsValid)
             {
                 throw new ArgumentException("Empty Email, or Password");
             }
+            string PasswordHash=SecurityHelper.ToGetPasswordHash(ValidatedUserCredentials.Value.Password);
 
-            this.Email = AuxEmail.Value;
+
+            this.Email = ValidatedUserCredentials.Value.Email;
             this.Password = PasswordHash;
 
         }  

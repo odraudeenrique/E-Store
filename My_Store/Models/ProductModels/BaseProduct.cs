@@ -118,8 +118,13 @@ namespace My_Store.Models.ProductModels
         {
             Category = new Category(CategoryType);
 
-            Result<string> AuxSerial = Helper.ToValidateIfStringValid(Serial);
-            SerialNumber = AuxSerial.IsValid ? AuxSerial.Value : AuxSerial.Error;
+            Result<string> AuxSerial = Helper.ToValidateString(Serial);
+
+            if (!AuxSerial.IsValid)
+            {
+                SerialNumber=AuxSerial.Error;
+            }
+            SerialNumber = AuxSerial.Value;
 
 
         }

@@ -25,7 +25,7 @@ namespace My_Store.Infrastructure.DataAccessInfrastructure
                 .Build();
 
             string ConnectionString = StringConfiguration.GetConnectionString("MyStoreConnectionString");
-            Result<string> Aux = Helper.ToValidateIfStringValid(ConnectionString);
+            Result<string> Aux = Helper.ToValidateString(ConnectionString);
 
             if (Aux.IsValid)
             {
@@ -43,7 +43,7 @@ namespace My_Store.Infrastructure.DataAccessInfrastructure
 
         public void ToSetProcedure(string Procedure)
         {
-            Result<string> Aux = Helper.ToValidateIfStringValid(Procedure);
+            Result<string> Aux = Helper.ToValidateString(Procedure);
 
             if (!Aux.IsValid || Command == null)
             {
@@ -56,7 +56,7 @@ namespace My_Store.Infrastructure.DataAccessInfrastructure
 
         public void ToSetQuery(string Query)
         {
-            Result<string> Aux = Helper.ToValidateIfStringValid(Query);
+            Result<string> Aux = Helper.ToValidateString(Query);
             if (!Aux.IsValid || Command == null)
             {
                 return;
@@ -68,7 +68,7 @@ namespace My_Store.Infrastructure.DataAccessInfrastructure
 
         public void ToSetParameters(string Name, object Value)
         {
-            Result<string> ParameterName = Helper.ToValidateIfStringValid(Name);
+            Result<string> ParameterName = Helper.ToValidateString(Name);
 
             if (!ParameterName.IsValid || Value == null)
             {

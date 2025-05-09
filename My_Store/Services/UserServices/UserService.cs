@@ -17,10 +17,12 @@ namespace My_Store.Services.UserServices
         public async Task Create(UserDTO UserDTO)
         {
             //Ahora tengo que ver cómo hago esto separando la validación para no crear el usuario de una 
-            Result<User> NewUser = Helper.ToValidateUser(UserDTO.Email, UserDTO.Password);
+            Result<(string Email, string Password)> UserCredentials = Helper.ToValidateUserCredentials(UserDTO.Email, UserDTO.Password);    
 
-            if((!NewUser.IsValid))
+            
+            if((!UserCredentials.IsValid))
             {
+
                 throw new ArgumentException("Invalid Email or Password");
             }
 
@@ -28,7 +30,8 @@ namespace My_Store.Services.UserServices
 
             try
             {
-                await _repository.Create(NewUser.Value);
+                User NewUser=new User(UserCredentials.Value.Email, UserCredentials.Value.Password);
+                await _repository.Create(NewUser);
             }
             catch
             {
