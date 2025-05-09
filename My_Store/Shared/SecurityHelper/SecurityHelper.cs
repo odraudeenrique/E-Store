@@ -7,22 +7,21 @@ namespace My_Store.Shared.SecurityHelper
 {
     public static class SecurityHelper
     {
-        public static string ToGetPasswordHash(string Password)
+        public static Result<string> ToGetPasswordHash(string Password)
         {
-            Result<string> Aux = Helper.Helper.ToValidateString(Password);
-
-            if (!Aux.IsValid)
-            {
-                return "";
-            }
-
             try
             {
                 using (SHA256 sha256 = SHA256.Create())
                 {
-                    byte[] OriginalPasswordToHash = Encoding.UTF8.GetBytes(Aux.Value);
+                    byte[] OriginalPasswordToHash = Encoding.UTF8.GetBytes(Password);
                     byte[] HashPassword = sha256.ComputeHash(OriginalPasswordToHash);
-                    return Convert.ToBase64String(HashPassword);
+                    string Hash= Convert.ToBase64String(HashPassword);
+                    if (string.IsNullOrWhiteSpace(Hash))
+                    {
+                        return Result<string>.Failed("The hashing convertion failed");
+                    }
+
+                    return Result<string>.Successful(Hash);
                 }
             }
             catch (Exception ex)

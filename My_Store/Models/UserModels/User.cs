@@ -41,13 +41,38 @@ namespace My_Store.Models.UserModels
             {
                 throw new ArgumentException("Empty Email, or Password");
             }
-            string PasswordHash=SecurityHelper.ToGetPasswordHash(ValidatedUserCredentials.Value.Password);
+            Result<string> PasswordHash=SecurityHelper.ToGetPasswordHash(ValidatedUserCredentials.Value.Password);
 
+            if (!PasswordHash.IsValid)
+            {
+                throw new ArgumentException("Hashing failed");
+            }
 
             this.Email = ValidatedUserCredentials.Value.Email;
-            this.Password = PasswordHash;
+            this.Password = PasswordHash.Value;
 
         }  
 
+        private Result<T> Create(string AuxEmail, string AuxPassword)
+        {
+            Result<(string Email, string Password)> ValidatedUserCredentials = Helper.ToValidateUserCredentials(Email, Password);
+
+            if (!ValidatedUserCredentials.IsValid)
+            {
+                return Result<string>.Failed("The credentials are not valid");
+            }
+            Result<string> PasswordHash = SecurityHelper.ToGetPasswordHash(ValidatedUserCredentials.Value.Password);
+
+            if (!PasswordHash.IsValid)
+            {
+                throw new ArgumentException("Hashing failed");
+            }
+            User NewUser = new User {
+                this.Email = ValidatedUserCredentials.Value.Email;
+                this.Password = ValidatedUserCredentials.Value.Password;
+            };
+
+            return Result<User>.Successful(NewUser);
+        }
     }
 }

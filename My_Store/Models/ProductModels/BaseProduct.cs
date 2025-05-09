@@ -117,12 +117,16 @@ namespace My_Store.Models.ProductModels
         public BaseProduct(int CategoryType, string Serial)
         {
             Category = new Category(CategoryType);
+            if (Category == null)
+            {
+                throw new ArgumentException("Invalid Category");
+            }
 
             Result<string> AuxSerial = Helper.ToValidateString(Serial);
 
             if (!AuxSerial.IsValid)
             {
-                SerialNumber=AuxSerial.Error;
+                throw new ArgumentException("InvalidSerial");
             }
             SerialNumber = AuxSerial.Value;
 

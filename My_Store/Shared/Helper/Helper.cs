@@ -39,7 +39,7 @@ namespace My_Store.Shared.Helper
         {
             
 
-            if (string.IsNullOrEmpty(Text))
+            if (string.IsNullOrWhiteSpace(Text))
             {
                 return Result<string>.Failed("The string is empty");
             }
@@ -109,9 +109,14 @@ namespace My_Store.Shared.Helper
                 return Result<(string, string)>.Failed("The password must have 8 or more characteres");
             }
 
-            string HashPassword = SecurityHelper.SecurityHelper.ToGetPasswordHash(ValidatedPassword.Value);
+            Result<string> HashPassword = SecurityHelper.SecurityHelper.ToGetPasswordHash(ValidatedPassword.Value);
 
-            return Result<(string, string)>.Successful((ValidatedEmail.Value, HashPassword));
+            if (!HashPassword.IsValid)
+            {
+                return Result<(string,string)>.Failed(HashPassword.Error);
+            }
+
+            return Result<(string, string)>.Successful((ValidatedEmail.Value, HashPassword.Value));
 
         }
         public static Result<string>ToValidateUserCredentials(string Password)
@@ -126,9 +131,13 @@ namespace My_Store.Shared.Helper
                 return Result<string>.Failed("The password must have 8 or more characteres");
             }
 
-            string HashPassword = SecurityHelper.SecurityHelper.ToGetPasswordHash(ValidatedPassword.Value);
+            Result<string> HashPassword = SecurityHelper.SecurityHelper.ToGetPasswordHash(ValidatedPassword.Value);
+            if (!HashPassword.IsValid)
+            {
+                return Result<string>.Failed(HashPassword.Error);
+            }
 
-            return Result<string>.Successful(HashPassword);
+            return Result<string>.Successful(HashPassword.Value);
 
 
         }

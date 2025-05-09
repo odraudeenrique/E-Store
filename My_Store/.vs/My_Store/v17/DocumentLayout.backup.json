@@ -3,8 +3,32 @@
   "WorkspaceRootPath": "C:\\Users\\Usuario\\OneDrive\\Escritorio\\Programacion\\E_Store\\My_Store\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{06C94C77-0D1B-4AA0-9ABC-0FB9BD874790}|My_Store.csproj|c:\\users\\usuario\\onedrive\\escritorio\\programacion\\e_store\\my_store\\models\\productmodels\\baseproduct.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{06C94C77-0D1B-4AA0-9ABC-0FB9BD874790}|My_Store.csproj|solutionrelative:models\\productmodels\\baseproduct.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{06C94C77-0D1B-4AA0-9ABC-0FB9BD874790}|My_Store.csproj|c:\\users\\usuario\\onedrive\\escritorio\\programacion\\e_store\\my_store\\models\\measuremodels\\weight.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{06C94C77-0D1B-4AA0-9ABC-0FB9BD874790}|My_Store.csproj|solutionrelative:models\\measuremodels\\weight.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{06C94C77-0D1B-4AA0-9ABC-0FB9BD874790}|My_Store.csproj|c:\\users\\usuario\\onedrive\\escritorio\\programacion\\e_store\\my_store\\infrastructure\\dataaccessinfrastructure\\dataaccess.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{06C94C77-0D1B-4AA0-9ABC-0FB9BD874790}|My_Store.csproj|solutionrelative:infrastructure\\dataaccessinfrastructure\\dataaccess.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{06C94C77-0D1B-4AA0-9ABC-0FB9BD874790}|My_Store.csproj|c:\\users\\usuario\\onedrive\\escritorio\\programacion\\e_store\\my_store\\shared\\helper\\helper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{06C94C77-0D1B-4AA0-9ABC-0FB9BD874790}|My_Store.csproj|solutionrelative:shared\\helper\\helper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{06C94C77-0D1B-4AA0-9ABC-0FB9BD874790}|My_Store.csproj|c:\\users\\usuario\\onedrive\\escritorio\\programacion\\e_store\\my_store\\shared\\securityhelper\\securityhelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{06C94C77-0D1B-4AA0-9ABC-0FB9BD874790}|My_Store.csproj|solutionrelative:shared\\securityhelper\\securityhelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{06C94C77-0D1B-4AA0-9ABC-0FB9BD874790}|My_Store.csproj|c:\\users\\usuario\\onedrive\\escritorio\\programacion\\e_store\\my_store\\models\\measuremodels\\dimension.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{06C94C77-0D1B-4AA0-9ABC-0FB9BD874790}|My_Store.csproj|solutionrelative:models\\measuremodels\\dimension.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{06C94C77-0D1B-4AA0-9ABC-0FB9BD874790}|My_Store.csproj|c:\\users\\usuario\\onedrive\\escritorio\\programacion\\e_store\\my_store\\services\\userservices\\userservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{06C94C77-0D1B-4AA0-9ABC-0FB9BD874790}|My_Store.csproj|solutionrelative:services\\userservices\\userservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{06C94C77-0D1B-4AA0-9ABC-0FB9BD874790}|My_Store.csproj|c:\\users\\usuario\\onedrive\\escritorio\\programacion\\e_store\\my_store\\models\\usermodels\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -17,14 +41,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{06C94C77-0D1B-4AA0-9ABC-0FB9BD874790}|My_Store.csproj|c:\\users\\usuario\\onedrive\\escritorio\\programacion\\e_store\\my_store\\infrastructure\\userinfrastructure\\userinfrastructure.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{06C94C77-0D1B-4AA0-9ABC-0FB9BD874790}|My_Store.csproj|solutionrelative:infrastructure\\userinfrastructure\\userinfrastructure.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{06C94C77-0D1B-4AA0-9ABC-0FB9BD874790}|My_Store.csproj|c:\\users\\usuario\\onedrive\\escritorio\\programacion\\e_store\\my_store\\services\\userservices\\userservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{06C94C77-0D1B-4AA0-9ABC-0FB9BD874790}|My_Store.csproj|solutionrelative:services\\userservices\\userservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{06C94C77-0D1B-4AA0-9ABC-0FB9BD874790}|My_Store.csproj|c:\\users\\usuario\\onedrive\\escritorio\\programacion\\e_store\\my_store\\shared\\helper\\helper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{06C94C77-0D1B-4AA0-9ABC-0FB9BD874790}|My_Store.csproj|solutionrelative:shared\\helper\\helper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -43,19 +59,71 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
+              "Title": "BaseProduct.cs",
+              "DocumentMoniker": "C:\\Users\\Usuario\\OneDrive\\Escritorio\\Programacion\\E_Store\\My_Store\\Models\\ProductModels\\BaseProduct.cs",
+              "RelativeDocumentMoniker": "Models\\ProductModels\\BaseProduct.cs",
+              "ToolTip": "C:\\Users\\Usuario\\OneDrive\\Escritorio\\Programacion\\E_Store\\My_Store\\Models\\ProductModels\\BaseProduct.cs",
+              "RelativeToolTip": "Models\\ProductModels\\BaseProduct.cs",
+              "ViewState": "AgIAAFUAAAAAAAAAAIAwwH4AAAArAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-09T01:48:19.954Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "DataAccess.cs",
+              "DocumentMoniker": "C:\\Users\\Usuario\\OneDrive\\Escritorio\\Programacion\\E_Store\\My_Store\\Infrastructure\\DataAccessInfrastructure\\DataAccess.cs",
+              "RelativeDocumentMoniker": "Infrastructure\\DataAccessInfrastructure\\DataAccess.cs",
+              "ToolTip": "C:\\Users\\Usuario\\OneDrive\\Escritorio\\Programacion\\E_Store\\My_Store\\Infrastructure\\DataAccessInfrastructure\\DataAccess.cs",
+              "RelativeToolTip": "Infrastructure\\DataAccessInfrastructure\\DataAccess.cs",
+              "ViewState": "AgIAANEAAAAAAAAAAAAhwEQAAAA7AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-09T01:40:12.058Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Weight.cs",
+              "DocumentMoniker": "C:\\Users\\Usuario\\OneDrive\\Escritorio\\Programacion\\E_Store\\My_Store\\Models\\MeasureModels\\Weight.cs",
+              "RelativeDocumentMoniker": "Models\\MeasureModels\\Weight.cs",
+              "ToolTip": "C:\\Users\\Usuario\\OneDrive\\Escritorio\\Programacion\\E_Store\\My_Store\\Models\\MeasureModels\\Weight.cs",
+              "RelativeToolTip": "Models\\MeasureModels\\Weight.cs",
+              "ViewState": "AgIAAAEAAAAAAAAAAAASwCgAAAAvAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-09T00:54:28.951Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Dimension.cs",
+              "DocumentMoniker": "C:\\Users\\Usuario\\OneDrive\\Escritorio\\Programacion\\E_Store\\My_Store\\Models\\MeasureModels\\Dimension.cs",
+              "RelativeDocumentMoniker": "Models\\MeasureModels\\Dimension.cs",
+              "ToolTip": "C:\\Users\\Usuario\\OneDrive\\Escritorio\\Programacion\\E_Store\\My_Store\\Models\\MeasureModels\\Dimension.cs",
+              "RelativeToolTip": "Models\\MeasureModels\\Dimension.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAACUAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-09T01:29:42.145Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
               "Title": "SecurityHelper.cs",
               "DocumentMoniker": "C:\\Users\\Usuario\\OneDrive\\Escritorio\\Programacion\\E_Store\\My_Store\\Shared\\SecurityHelper\\SecurityHelper.cs",
               "RelativeDocumentMoniker": "Shared\\SecurityHelper\\SecurityHelper.cs",
               "ToolTip": "C:\\Users\\Usuario\\OneDrive\\Escritorio\\Programacion\\E_Store\\My_Store\\Shared\\SecurityHelper\\SecurityHelper.cs",
               "RelativeToolTip": "Shared\\SecurityHelper\\SecurityHelper.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAABYAAAAAAAAAAAAgwBEAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-05-07T22:30:24.392Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 7,
               "Title": "User.cs",
               "DocumentMoniker": "C:\\Users\\Usuario\\OneDrive\\Escritorio\\Programacion\\E_Store\\My_Store\\Models\\UserModels\\User.cs",
               "RelativeDocumentMoniker": "Models\\UserModels\\User.cs",
@@ -68,7 +136,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 8,
               "Title": "IRepository.cs",
               "DocumentMoniker": "C:\\Users\\Usuario\\OneDrive\\Escritorio\\Programacion\\E_Store\\My_Store\\Infrastructure\\Interfaces\\IRepository.cs",
               "RelativeDocumentMoniker": "Infrastructure\\Interfaces\\IRepository.cs",
@@ -81,7 +149,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 9,
               "Title": "UserInfrastructure.cs",
               "DocumentMoniker": "C:\\Users\\Usuario\\OneDrive\\Escritorio\\Programacion\\E_Store\\My_Store\\Infrastructure\\UserInfrastructure\\UserInfrastructure.cs",
               "RelativeDocumentMoniker": "Infrastructure\\UserInfrastructure\\UserInfrastructure.cs",
@@ -94,7 +162,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 6,
               "Title": "UserService.cs",
               "DocumentMoniker": "C:\\Users\\Usuario\\OneDrive\\Escritorio\\Programacion\\E_Store\\My_Store\\Services\\UserServices\\UserService.cs",
               "RelativeDocumentMoniker": "Services\\UserServices\\UserService.cs",
@@ -107,13 +175,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 3,
               "Title": "Helper.cs",
               "DocumentMoniker": "C:\\Users\\Usuario\\OneDrive\\Escritorio\\Programacion\\E_Store\\My_Store\\Shared\\Helper\\Helper.cs",
               "RelativeDocumentMoniker": "Shared\\Helper\\Helper.cs",
               "ToolTip": "C:\\Users\\Usuario\\OneDrive\\Escritorio\\Programacion\\E_Store\\My_Store\\Shared\\Helper\\Helper.cs",
               "RelativeToolTip": "Shared\\Helper\\Helper.cs",
-              "ViewState": "AgIAAGcAAAAAAAAAAAAcwHQAAAA7AAAAAAAAAA==",
+              "ViewState": "AgIAACUAAAAAAAAAAAAcwDMAAABNAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-04-20T20:43:30.771Z",
               "EditorCaption": ""
