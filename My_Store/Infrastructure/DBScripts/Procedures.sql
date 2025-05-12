@@ -12,31 +12,37 @@ END
 
 
 
-CREATE PROCEDURE StoredToCreateUse
+CREATE PROCEDURE StoredToCreateUser
 @Email NVARCHAR(255),
-@Password NVarchar(44),
-@UserType INT 
+@Password NVARCHAR(44),
+@TypeOfUser INT
 AS
-Begin 
-	SET NOCOUNT ON;
-	IF @Email IS NULL OR @Password IS NULL OR @UserType IS NULL
+BEGIN
+	SET NOCOUNT  ON;
+	IF @Email IS NULL OR @Password IS NULL OR @TypeOfUser IS NULL
+	BEGIN 
+		RAISERROR('Missing required parameters',16,1);
+		RETURN;
+	END
+	
+	IF EXISTS(SELECT 1 FROM Users WHERE EMAIL=@Email)
 	BEGIN
-		SELECT CAST('Missing required parameters' AS NVARCHAR(100));
+		RAISERROR('The user already exists',16,1);
 		RETURN;
 	END
 
-	IF EXISTS(SELECT 1 FROM Users WHERE Email=@Email)
-	BEGIN 
-		SELECT CAST('The email already exists' AS NVARCHAR(100) );
-		return;
-	END
-
 	BEGIN TRY
-		INSERT INTO Users ([Email],[PasswordHash],[UserType])
-		VALUES(@Email,@Password,@UserType)
+		INSERT INTO Users([Email],[PasswordHash],[UserType])
+		VALUES (@Email,@Password,@TypeOfUser);
 
-		SELECT CAST('User created successfully' AS NVARCHAR(100) );
+		DECLARE @NewId INT=SCOPE_IDENTITY();
+
+		SELECT 
+			@NewId as Id,
+			@Email as Email,
+			@TypeOfUser as TypeOfUser;
 	END TRY
+
 	BEGIN CATCH
 		THROW;
 	END CATCH

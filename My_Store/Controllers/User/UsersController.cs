@@ -13,7 +13,7 @@ namespace My_Store.Controllers.User
     [ApiController]
     public class UsersController : ControllerBase
     {
-        private readonly IService<UserDTO> _userService;
+        private readonly IService<UserCreateDTO> _userService;
 
         public UsersController()
         {
@@ -48,11 +48,11 @@ namespace My_Store.Controllers.User
             }
 
 
-            UserDTO Aux = new UserDTO();
+            UserCreateDTO Aux = new UserCreateDTO();
 
             try
             {
-                Aux = JsonSerializer.Deserialize<UserDTO>(Body, new JsonSerializerOptions
+                Aux = JsonSerializer.Deserialize<UserCreateDTO>(Body, new JsonSerializerOptions
                 {
                     PropertyNameCaseInsensitive = true
                 });

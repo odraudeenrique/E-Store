@@ -18,26 +18,30 @@ namespace My_Store.Infrastructure.UserInfrastructure
         }
 
 
-        public async Task<int> Create(User User)
+        public async Task<UserResponseDTO> Create(User User)
         {
-            Result<(string Email, string Password)> UserCredentials = Helper.ToValidateUserCredentials(User.Email, User.Password);
-
-            
-            if (!UserCredentials.IsValid)
-            {
-                const int InvalidValue = -1;
-                return InvalidValue;
-            }
-
             try
             {
+                int RegularUsesType = 1;
                 Data.ToSetProcedure("StoredToCreateUser");
-                Data.ToSetParameters("@Email", UserCredentials.Value.Email);
-                Data.ToSetParameters("@Password", UserCredentials.Value.Password);
+                Data.ToSetParameters("@Email", User.Email);
+                Data.ToSetParameters("@Password", User.Password);
+                Data.ToSetParameters("@UserType", RegularUsesType);
 
+               var Reader= await Data.ToExecuteWithResult();
+               UserResponseDTO UserDTO = new UserResponseDTO();
+                while (Reader.Read())
+                {
+                    const string InvalidValue = "";
+                    const int InvalidIntegerValue = -1;
+                    
+                    UserDTO.Email = !string.IsNullOrWhiteSpace(((string)Reader["Email"]))? ((string)Reader["Email"]):InvalidValue;
+                    UserDTO.Password = !string.IsNullOrWhiteSpace(((string)Reader["Password"]))?((string)Reader["Password"]):InvalidValue;
+                    UserDTO.UserType = ((int)Reader["TypeOfUser"]) > 0 ? ((TypeOfUser)Reader["TypeOfUser"]) : TypeOfUser.Invalid;
+                }
 
-                int UserStatus = await Data.ToExecuteScalarInt();
-                return UserStatus;
+                
+                return  UserDTO;
             }
             catch (Exception ex)
             {

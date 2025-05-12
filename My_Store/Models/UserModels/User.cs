@@ -32,44 +32,29 @@ namespace My_Store.Models.UserModels
 
 
 
-        public User(string Email, string Password)
+        public User()
         {
-
-            Result<(string Email, string Password)> ValidatedUserCredentials=Helper.ToValidateUserCredentials(Email, Password);
-
-            if (!ValidatedUserCredentials.IsValid)
-            {
-                throw new ArgumentException("Empty Email, or Password");
-            }
-            Result<string> PasswordHash=SecurityHelper.ToGetPasswordHash(ValidatedUserCredentials.Value.Password);
-
-            if (!PasswordHash.IsValid)
-            {
-                throw new ArgumentException("Hashing failed");
-            }
-
-            this.Email = ValidatedUserCredentials.Value.Email;
-            this.Password = PasswordHash.Value;
 
         }  
 
-        private Result<T> Create(string AuxEmail, string AuxPassword)
+        public static Result<User> Create(string AuxEmail, string AuxPassword)
         {
-            Result<(string Email, string Password)> ValidatedUserCredentials = Helper.ToValidateUserCredentials(Email, Password);
+            Result<(string Email, string Password)> ValidatedUserCredentials = Helper.ToValidateUserCredentials(AuxEmail, AuxPassword);
 
             if (!ValidatedUserCredentials.IsValid)
             {
-                return Result<string>.Failed("The credentials are not valid");
+                return Result<User>.Failed("The credentials are not valid");
             }
             Result<string> PasswordHash = SecurityHelper.ToGetPasswordHash(ValidatedUserCredentials.Value.Password);
 
             if (!PasswordHash.IsValid)
             {
-                throw new ArgumentException("Hashing failed");
+                return Result<User>.Failed("There is an error on the hash");
             }
-            User NewUser = new User {
-                this.Email = ValidatedUserCredentials.Value.Email;
-                this.Password = ValidatedUserCredentials.Value.Password;
+            User NewUser = new User
+            {
+                Email = ValidatedUserCredentials.Value.Email,
+                Password = PasswordHash.Value
             };
 
             return Result<User>.Successful(NewUser);

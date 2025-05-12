@@ -5,7 +5,7 @@ using My_Store.Shared.Helper;
 
 namespace My_Store.Services.UserServices
 {
-    public class UserService : IService<UserDTO>
+    public class UserService : IService<UserCreateDTO>
     {
         private readonly IRepository<User> _repository;
 
@@ -14,20 +14,19 @@ namespace My_Store.Services.UserServices
             _repository = new UserInfrastructure();
         }
 
-        public async Task Create(UserDTO UserDTO)
+        public async Task Create(UserCreateDTO UserDTO)
         {
-            Result<(string Email, string Password)> UserCredentials = Helper.ToValidateUserCredentials(UserDTO.Email, UserDTO.Password);    
-
-            if((!UserCredentials.IsValid))
-            {
-
-                throw new ArgumentException("Invalid Email or Password");
-            }
-
             try
             {
-                User NewUser=new User(UserCredentials.Value.Email, UserCredentials.Value.Password);
-                await _repository.Create(NewUser);
+                //User NewUser=new User(UserCredentials.Value.Email, UserCredentials.Value.Password);
+                Result<User> NewUser = User.Create(UserDTO.Email, UserDTO.Password);
+
+                if (!NewUser.IsValid)
+                {
+                    throw new ArgumentException("The user is not valid");
+                }
+
+                await _repository.Create(NewUser.Value);
             }
             catch
             {
@@ -35,7 +34,7 @@ namespace My_Store.Services.UserServices
             }
             
         }
-        public void Update(UserDTO UserDTO)
+        public void Update(UserCreateDTO UserDTO)
         {
             
         }

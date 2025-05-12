@@ -4,6 +4,8 @@ using System.Data;
 using Microsoft.Extensions.Configuration;
 using System.IO;
 using My_Store.Shared.Helper;
+using My_Store.Models.UserModels;
+using Microsoft.AspNetCore.Authentication;
 
 
 
@@ -14,7 +16,7 @@ namespace My_Store.Infrastructure.DataAccessInfrastructure
         private SqlConnection Connection { get; set; }
         private SqlCommand Command { get; set; }
         private SqlDataReader Reader { get; set; }
-
+        
 
         public DataAccess()
         {
@@ -107,7 +109,7 @@ namespace My_Store.Infrastructure.DataAccessInfrastructure
             }
 
         }
-
+     
         public async Task ToExecute()
         {
             if (Connection == null || Command == null)
@@ -120,6 +122,30 @@ namespace My_Store.Infrastructure.DataAccessInfrastructure
             {
                 await Connection.OpenAsync();
                 await Command.ExecuteNonQueryAsync();
+            }
+            catch
+            {
+                throw;
+            }
+            finally
+            {
+                DisposeAsync();
+            }
+        }
+
+        public async Task<SqlDataReader> ToExecuteWithResult()
+        {
+            if (Connection == null || Command == null)
+            {
+                return null;
+            }
+
+            Command.Connection = Connection;
+            try
+            {
+                await Connection.OpenAsync();
+                Reader=await Command.ExecuteReaderAsync();
+                return Reader;
             }
             catch
             {
@@ -191,6 +217,7 @@ namespace My_Store.Infrastructure.DataAccessInfrastructure
                 DisposeAsync();
             }
         }
+    
 
         public async ValueTask DisposeAsync()
         {
