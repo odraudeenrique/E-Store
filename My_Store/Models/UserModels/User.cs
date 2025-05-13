@@ -51,6 +51,7 @@ namespace My_Store.Models.UserModels
             {
                 return Result<User>.Failed("There is an error on the hash");
             }
+
             User NewUser = new User
             {
                 Email = ValidatedUserCredentials.Value.Email,

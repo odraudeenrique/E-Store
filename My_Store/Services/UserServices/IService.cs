@@ -1,9 +1,11 @@
 ﻿namespace My_Store.Services.UserServices
 {
-    public interface IService <in T> where T : class
+    public interface IService <TInput,TOutput> 
+        where TInput : class
+        where TOutput : class 
     {
-        Task Create(T entity);  
-        void Update(T entity);
+        Task<TOutput> Create(TInput entity);  
+        //void Update(T entity);
       
     }
 }

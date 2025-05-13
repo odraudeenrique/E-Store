@@ -5,16 +5,16 @@ using My_Store.Shared.Helper;
 
 namespace My_Store.Services.UserServices
 {
-    public class UserService : IService<UserCreateDTO>
+    public class UserService : IService<UserCreateDTO,UserResponseDTO>
     {
-        private readonly IRepository<User> _repository;
+        private readonly IRepository<User,UserResponseDTO> _repository;
 
         public UserService()
         {
             _repository = new UserInfrastructure();
         }
 
-        public async Task Create(UserCreateDTO UserDTO)
+        public async Task<UserResponseDTO> Create(UserCreateDTO UserDTO)
         {
             try
             {
@@ -26,11 +26,13 @@ namespace My_Store.Services.UserServices
                     throw new ArgumentException("The user is not valid");
                 }
 
-                await _repository.Create(NewUser.Value);
+                UserResponseDTO NewUserResponseDTO = await _repository.Create(NewUser.Value);
+                return NewUserResponseDTO;
             }
             catch
             {
-                throw new ArgumentException("An error occour; the user couldn't be created.");
+                throw new ArgumentException("An error occurred while creating the user");
+                throw new ArgumentException("An error occurred while creating the user");
             }
             
         }

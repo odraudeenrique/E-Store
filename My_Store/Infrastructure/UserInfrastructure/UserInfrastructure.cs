@@ -4,10 +4,9 @@ using My_Store.Infrastructure.DataAccessInfrastructure;
 using My_Store.Infrastructure.ErrorInfrastructure;
 using My_Store.Infrastructure.Interfaces;
 
-
 namespace My_Store.Infrastructure.UserInfrastructure
 {
-    public class UserInfrastructure : IRepository<User>
+    public class UserInfrastructure : IRepository<User,UserResponseDTO>
     {
         private DataAccess _data;
         private DataAccess Data { get { return this._data; } set { this._data = value; } }
@@ -18,14 +17,14 @@ namespace My_Store.Infrastructure.UserInfrastructure
         }
 
 
-        public async Task<UserResponseDTO> Create(User User)
+        public async Task<UserResponseDTO> Create  (User Aux)
         {
             try
             {
                 int RegularUsesType = 1;
                 Data.ToSetProcedure("StoredToCreateUser");
-                Data.ToSetParameters("@Email", User.Email);
-                Data.ToSetParameters("@Password", User.Password);
+                Data.ToSetParameters("@Email", Aux.Email);
+                Data.ToSetParameters("@Password", Aux.Password);
                 Data.ToSetParameters("@UserType", RegularUsesType);
 
                var Reader= await Data.ToExecuteWithResult();
@@ -49,10 +48,17 @@ namespace My_Store.Infrastructure.UserInfrastructure
                 ErrorLogger.LogToDatabase(Error);
                 throw;
             }
+            finally
+            {
+                if(Data!= null)
+                {
+                    await Data.DisposeAsync();
+                }
+            }
         }
-        public void Update(User User)
-        {
+        //public void Update(User User)
+        //{
 
-        }
+        //}
     }
 }

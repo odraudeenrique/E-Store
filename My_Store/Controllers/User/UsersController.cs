@@ -4,6 +4,7 @@ using My_Store.Services.UserServices;
 using System.Text.Json;
 using System.IO;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -13,7 +14,7 @@ namespace My_Store.Controllers.User
     [ApiController]
     public class UsersController : ControllerBase
     {
-        private readonly IService<UserCreateDTO> _userService;
+        private readonly IService<UserCreateDTO, UserResponseDTO> _userService;
 
         public UsersController()
         {
@@ -37,14 +38,15 @@ namespace My_Store.Controllers.User
 
         // POST api/<UserController>
         [HttpPost]
-        public async Task<IActionResult> Post()
+        public async Task<ActionResult<UserResponseDTO>> Post()
         {
             using var Reader = new StreamReader(Request.Body);
             var Body = await Reader.ReadToEndAsync();
 
             if (string.IsNullOrEmpty(Body))
             {
-                return BadRequest("The user is null");
+                ActionResult Status = BadRequest("The user is null");
+                return Status;
             }
 
 
@@ -56,32 +58,38 @@ namespace My_Store.Controllers.User
                 {
                     PropertyNameCaseInsensitive = true
                 });
-            }catch(JsonException ex)
+            }
+            catch (JsonException ex)
             {
-                return BadRequest("Invalid JSON format");
+                ActionResult Status = BadRequest("Invalid JSON format");
+                return Status;
             }
 
-            if((Aux==null)|| (string.IsNullOrEmpty(Aux.Email)) || (string.IsNullOrEmpty(Aux.Password)))
+            if ((Aux == null) || (string.IsNullOrEmpty(Aux.Email)) || (string.IsNullOrEmpty(Aux.Password)))
             {
-                return BadRequest("Missing required user fields");
+                ActionResult Status = BadRequest("Missing required user fields");
+                return Status;
             }
 
 
 
             try
             {
-                await _userService.Create(Aux);
-                return StatusCode(201, "User created successfully");
+                UserResponseDTO NewUser = await _userService.Create(Aux);
+                ActionResult Status = StatusCode(201, "User created successfully");
+
+                return Status;
             }
             catch (Exception ex)
             {
-                return StatusCode(500, "Internal server error: " + ex.Message);
+                ActionResult Status = StatusCode(500, "Internal server error: " + ex.Message);
+                return Status;
             }
         }
 
 
 
-    
+
 
         // PUT api/<UserController>/5
         [HttpPut("{id}")]

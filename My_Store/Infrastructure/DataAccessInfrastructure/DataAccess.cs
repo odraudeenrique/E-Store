@@ -16,7 +16,7 @@ namespace My_Store.Infrastructure.DataAccessInfrastructure
         private SqlConnection Connection { get; set; }
         private SqlCommand Command { get; set; }
         private SqlDataReader Reader { get; set; }
-        
+
 
         public DataAccess()
         {
@@ -100,16 +100,10 @@ namespace My_Store.Infrastructure.DataAccessInfrastructure
             {
                 throw;
             }
-            finally
-            {
-                if (Reader == null)
-                {
-                    DisposeAsync();
-                }
-            }
+         
 
         }
-     
+
         public async Task ToExecute()
         {
             if (Connection == null || Command == null)
@@ -127,10 +121,7 @@ namespace My_Store.Infrastructure.DataAccessInfrastructure
             {
                 throw;
             }
-            finally
-            {
-                DisposeAsync();
-            }
+          
         }
 
         public async Task<SqlDataReader> ToExecuteWithResult()
@@ -144,17 +135,14 @@ namespace My_Store.Infrastructure.DataAccessInfrastructure
             try
             {
                 await Connection.OpenAsync();
-                Reader=await Command.ExecuteReaderAsync();
+                Reader=await Command.ExecuteReaderAsync(System.Data.CommandBehavior.CloseConnection);
                 return Reader;
             }
             catch
             {
                 throw;
             }
-            finally
-            {
-                DisposeAsync();
-            }
+           
         }
 
 
@@ -183,10 +171,7 @@ namespace My_Store.Infrastructure.DataAccessInfrastructure
             {
                 throw;
             }
-            finally
-            {
-                DisposeAsync();
-            }
+          
         }
 
         public async Task<string> ToExecuteScalarString()
@@ -212,10 +197,7 @@ namespace My_Store.Infrastructure.DataAccessInfrastructure
             {
                 throw;
             }
-            finally
-            {
-                DisposeAsync();
-            }
+          
         }
     
 
