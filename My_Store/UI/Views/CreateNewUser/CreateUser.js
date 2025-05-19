@@ -1,4 +1,5 @@
-﻿document.addEventListener("DOMContentLoaded", function () {
+﻿import { UserService } from "../../Services/user.service";
+document.addEventListener("DOMContentLoaded", function () {
 
     const inputPassword = document.getElementById("my_store_new_user_password_input");
     const checkboxPassword = document.getElementById("my_store_new_user_checkbox_input");
@@ -34,17 +35,24 @@
 
 
 
-    userForm.addEventListener("submit", function (event) {
-        let validate=toValidateFields(event);
+    userForm.addEventListener("submit", async  function (event) {
+        let isValidate=toValidateFields(event);
       
-        if (validate) {
+        if (isValidate) {
             const newUser = {
                 email: userEmail.value.trim(),
                 password: userPassword.value.trim()
             }
             event.preventDefault();
 
-            console.log(newUser);
+            try {
+                const user = await UserService.createUser((email, password));
+                console.log("The user was created succesfully");
+            }
+            catch (error) {
+                alert("There was a mistake", error.message);
+            }
+
         }
    
     })

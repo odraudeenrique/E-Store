@@ -18,7 +18,6 @@ namespace My_Store.Services.UserServices
         {
             try
             {
-                //User NewUser=new User(UserCredentials.Value.Email, UserCredentials.Value.Password);
                 Result<User> NewUser = User.Create(UserDTO.Email, UserDTO.Password);
 
                 if (!NewUser.IsValid)

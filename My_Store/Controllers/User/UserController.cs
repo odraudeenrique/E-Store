@@ -12,11 +12,11 @@ namespace My_Store.Controllers.User
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UsersController : ControllerBase
+    public class UserController : ControllerBase
     {
         private readonly IService<UserCreateDTO, UserResponseDTO> _userService;
 
-        public UsersController()
+        public UserController()
         {
             _userService = new UserService();
         }
@@ -38,7 +38,7 @@ namespace My_Store.Controllers.User
 
         // POST api/<UserController>
         [HttpPost]
-        public async Task<ActionResult<UserResponseDTO>> Post()
+        public async Task<ActionResult<UserResponseDTO>> Create()
         {
             using var Reader = new StreamReader(Request.Body);
             var Body = await Reader.ReadToEndAsync();

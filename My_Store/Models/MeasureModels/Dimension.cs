@@ -46,7 +46,7 @@ namespace My_Store.Models.MeasureModels
                 this.Width = 0;
                 this.Height = 0;
             }
-            s
+            
             this.Depth = ValidatedDepth.Value;
             this.Width = ValidatedWidth.Value;
             this.Height = ValidatedHeight.Value;
