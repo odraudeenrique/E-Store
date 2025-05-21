@@ -15,4 +15,27 @@
     <Folder Include="Infrastructure\DBScripts\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="wwwroot\UI\Models\user.model.js" />
+    <None Include="wwwroot\UI\Services\user.service.js" />
+    <None Include="wwwroot\UI\Views\CreateNewUser\CreateUser.css" />
+    <None Include="wwwroot\UI\Views\CreateNewUser\CreateUser.html" />
+    <None Include="wwwroot\UI\Views\CreateNewUser\CreateUser.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
 </Project>

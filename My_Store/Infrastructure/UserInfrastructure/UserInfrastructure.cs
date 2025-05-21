@@ -21,11 +21,11 @@ namespace My_Store.Infrastructure.UserInfrastructure
         {
             try
             {
-                int RegularUsesType = 1;
+                int RegularUserType = 1;
                 Data.ToSetProcedure("StoredToCreateUser");
                 Data.ToSetParameters("@Email", Aux.Email);
                 Data.ToSetParameters("@Password", Aux.Password);
-                Data.ToSetParameters("@UserType", RegularUsesType);
+                Data.ToSetParameters("@TypeOfUser", RegularUserType);
 
                var Reader= await Data.ToExecuteWithResult();
                UserResponseDTO UserDTO = new UserResponseDTO();
@@ -35,7 +35,7 @@ namespace My_Store.Infrastructure.UserInfrastructure
                     const int InvalidIntegerValue = -1;
                     
                     UserDTO.Email = !string.IsNullOrWhiteSpace(((string)Reader["Email"]))? ((string)Reader["Email"]):InvalidValue;
-                    UserDTO.Password = !string.IsNullOrWhiteSpace(((string)Reader["Password"]))?((string)Reader["Password"]):InvalidValue;
+                    //UserDTO.Password = !string.IsNullOrWhiteSpace(((string)Reader["Password"]))?((string)Reader["Password"]):InvalidValue;
                     UserDTO.UserType = ((int)Reader["TypeOfUser"]) > 0 ? ((TypeOfUser)Reader["TypeOfUser"]) : TypeOfUser.Invalid;
                 }
 

@@ -12,7 +12,7 @@ namespace My_Store.Controllers.User
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserController : ControllerBase
+    public class UserController : ControllerBase        
     {
         private readonly IService<UserCreateDTO, UserResponseDTO> _userService;
 
@@ -38,44 +38,55 @@ namespace My_Store.Controllers.User
 
         // POST api/<UserController>
         [HttpPost]
-        public async Task<ActionResult<UserResponseDTO>> Create()
+        public async Task<ActionResult<UserResponseDTO>> Create([FromBody] UserCreateDTO User)
         {
-            using var Reader = new StreamReader(Request.Body);
-            var Body = await Reader.ReadToEndAsync();
-
-            if (string.IsNullOrEmpty(Body))
+            if(User== null)
             {
                 ActionResult Status = BadRequest("The user is null");
                 return Status;
             }
 
-
-            UserCreateDTO Aux = new UserCreateDTO();
-
-            try
-            {
-                Aux = JsonSerializer.Deserialize<UserCreateDTO>(Body, new JsonSerializerOptions
-                {
-                    PropertyNameCaseInsensitive = true
-                });
-            }
-            catch (JsonException ex)
-            {
-                ActionResult Status = BadRequest("Invalid JSON format");
-                return Status;
-            }
-
-            if ((Aux == null) || (string.IsNullOrEmpty(Aux.Email)) || (string.IsNullOrEmpty(Aux.Password)))
+            if( (string.IsNullOrWhiteSpace(User.Email)) || (string.IsNullOrWhiteSpace(User.Password)) )
             {
                 ActionResult Status = BadRequest("Missing required user fields");
                 return Status;
             }
+            //using var Reader = new StreamReader(Request.Body);
+            //var Body = await Reader.ReadToEndAsync();
+
+            //if (string.IsNullOrEmpty(Body))
+            //{
+            //    ActionResult Status = BadRequest("The user is null");
+            //    return Status;
+            //}
+
+
+            //UserCreateDTO Aux = new UserCreateDTO();
+
+            //try
+            //{
+            //    Aux = JsonSerializer.Deserialize<UserCreateDTO>(Body, new JsonSerializerOptions
+            //    {
+            //        PropertyNameCaseInsensitive = true
+            //    });
+            //}
+            //catch (JsonException ex)
+            //{
+            //    ActionResult Status = BadRequest("Invalid JSON format");
+            //    return Status;
+            //}
+
+            //if ((Aux == null) || (string.IsNullOrEmpty(Aux.Email)) || (string.IsNullOrEmpty(Aux.Password)))
+            //{
+            //    ActionResult Status = BadRequest("Missing required user fields");
+            //    return Status;
+            //}
 
 
 
             try
             {
-                UserResponseDTO NewUser = await _userService.Create(Aux);
+                UserResponseDTO NewUser = await _userService.Create(User);
                 ActionResult Status = StatusCode(201, "User created successfully");
 
                 return Status;

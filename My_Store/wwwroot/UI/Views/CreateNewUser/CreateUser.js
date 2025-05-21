@@ -1,4 +1,6 @@
-﻿import { UserService } from "../../Services/user.service";
+﻿import { UserService } from "../../Services/user.service.js";
+
+
 document.addEventListener("DOMContentLoaded", function () {
 
     const inputPassword = document.getElementById("my_store_new_user_password_input");
@@ -56,9 +58,5 @@ document.addEventListener("DOMContentLoaded", function () {
         }
    
     })
-
-    //Tengo que cambiar la configuración de las carpetas del UI
-
-
 
 })

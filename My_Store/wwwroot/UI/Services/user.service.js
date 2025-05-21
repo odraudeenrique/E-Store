@@ -1,16 +1,16 @@
-﻿import { User } from "../Models/user.model";
+﻿import { User } from "../Models/user.model.js";
 
 export class UserService {
 
     static async  createUser(email, password) {
-        const url = "https://localhost:5001/api/user";
+        const url = "http://localhost:5113/api/user";
 
         if (email === null || email === undefined || email === "" || password === null || password === undefined || password==="") {
             return; 
         }
 
-        const regularUser = 1;
-        const user = { email, password, regularUser };
+        
+        const user = { email, password};
 
         const request = {
             method: "POST",
