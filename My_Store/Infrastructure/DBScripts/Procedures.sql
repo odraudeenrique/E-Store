@@ -49,3 +49,25 @@ BEGIN
 END
 
 
+CREATE PROCEDURE StoredToLogin 
+@Email NVARCHAR(255),
+@Password NVARCHAR(44)
+AS
+BEGIN 
+	IF @Email IS NULL OR @Password IS NULL
+	BEGIN 
+		RAISERROR('Missing required parameters',16,1);
+		return;
+	end
+	
+	BEGIN TRY
+		SELECT U.Email, U.UserType FROM Users U WHERE @Email=U.Email AND @Password=U.PasswordHash
+	END TRY
+
+	BEGIN CATCH
+		THROW;
+	END CATCH
+END 
+
+
+

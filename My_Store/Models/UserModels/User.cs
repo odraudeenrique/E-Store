@@ -60,5 +60,7 @@ namespace My_Store.Models.UserModels
 
             return Result<User>.Successful(NewUser);
         }
+
+      
     }
 }

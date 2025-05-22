@@ -87,7 +87,7 @@ namespace My_Store.Controllers.User
             try
             {
                 UserResponseDTO NewUser = await _userService.Create(User);
-                ActionResult Status = StatusCode(201, "User created successfully");
+                ActionResult Status = StatusCode(201,NewUser);
 
                 return Status;
             }

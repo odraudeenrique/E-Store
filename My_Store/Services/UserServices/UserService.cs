@@ -26,15 +26,29 @@ namespace My_Store.Services.UserServices
                 }
 
                 UserResponseDTO NewUserResponseDTO = await _repository.Create(NewUser.Value);
+
+                if(NewUserResponseDTO == null)
+                {
+                    return null;
+                }
                 return NewUserResponseDTO;
             }
             catch
             {
                 throw new ArgumentException("An error occurred while creating the user");
-                throw new ArgumentException("An error occurred while creating the user");
             }
-            
+
         }
+
+        public async Task<UserResponseDTO> Login(UserCreateDTO)
+        {
+            try
+            {
+
+            }
+        }
+
+
         public void Update(UserCreateDTO UserDTO)
         {
             
