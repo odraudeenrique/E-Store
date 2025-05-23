@@ -47,6 +47,7 @@ namespace My_Store.Services.UserServices
         {
             try
             {
+                //Acá tengo que ver si la validación va a ir en esta capa o en el controlador, porque al crear el usuario se vuelve a aplicar el hash ( Leer chat gpt)
                 Result<User> UserToLogIn = User.Create(UserDTO.Email,UserDTO.Password);
 
                 if (!UserToLogIn.IsValid)

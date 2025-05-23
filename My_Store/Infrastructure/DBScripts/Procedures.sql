@@ -61,7 +61,7 @@ BEGIN
 	end
 	
 	BEGIN TRY
-		SELECT U.Email, U.UserType FROM Users U WHERE @Email=U.Email AND @Password=U.PasswordHash
+		SELECT U.Id, U.Email, U.UserType FROM Users U WHERE @Email=U.Email AND @Password=U.PasswordHash
 	END TRY
 
 	BEGIN CATCH
