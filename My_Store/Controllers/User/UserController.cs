@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using My_Store.Models.UserModels;
 using My_Store.Services.UserServices;
+using My_Store.Shared.Helper;
 using System.Text.Json;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using My_Store.Services.Interfaces;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -97,6 +99,58 @@ namespace My_Store.Controllers.User
                 return Status;
             }
         }
+
+
+        // POST api/<UserController>
+        [HttpPost("Login")]
+        public async Task<ActionResult<UserResponseDTO>> Login([FromBody] UserCreateDTO User)
+        {
+            if (User == null)
+            {
+                ActionResult Status = BadRequest("The user is null");
+                return Status;
+            }
+
+            Result<(string Email,string Password)> UserForLogIn = Helper.ToValidateUserCredentials(User.Email,User.Password);
+
+            if (!UserForLogIn.IsValid)
+            {
+                ActionResult Status = BadRequest("The credentials are not valid");
+            }
+
+
+            try
+            {
+
+                IUserService<UserCreateDTO,UserResponseDTO> _IUserService = new UserService();
+                UserCreateDTO Aux= new UserCreateDTO();
+                Aux.Email = UserForLogIn.Value.Email;
+                Aux.Password = UserForLogIn.Value.Password;
+
+                UserResponseDTO LoggedUser=await  _IUserService.Login(Aux);
+
+                if(LoggedUser == null)
+                {
+                    return Unauthorized("One of the credentials is invalid");
+                }
+
+                ActionResult Status = StatusCode(200, LoggedUser);
+                return Status;  
+
+
+
+            }catch(Exception ex)
+            {
+                ActionResult Status= StatusCode(500, "Internal server error: " + ex.Message);
+                return Status;
+            }
+
+
+
+
+            
+        }
+
 
 
 

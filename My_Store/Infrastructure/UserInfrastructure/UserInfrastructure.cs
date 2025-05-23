@@ -8,7 +8,7 @@ using Microsoft.Data.SqlClient;
 
 namespace My_Store.Infrastructure.UserInfrastructure
 {
-    public class UserInfrastructure : IRepository<User,UserResponseDTO>
+    public class UserInfrastructure : IRepository<User,UserResponseDTO>, IUserRepository<User,UserResponseDTO>
     {
         private DataAccess _data;
         private DataAccess Data { get { return this._data; } set { this._data = value; } }
