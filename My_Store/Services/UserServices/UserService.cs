@@ -1,10 +1,12 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.IdentityModel.Tokens;
 using My_Store.Infrastructure.ErrorInfrastructure;
 using My_Store.Infrastructure.Interfaces;
 using My_Store.Infrastructure.UserInfrastructure;
 using My_Store.Models.UserModels;
 using My_Store.Services.Interfaces;
 using My_Store.Shared.Helper;
+using My_Store.Shared.SecurityHelper;
 
 namespace My_Store.Services.UserServices    
 {
@@ -21,7 +23,18 @@ namespace My_Store.Services.UserServices
         {
             try
             {
-                Result<User> NewUser = User.Create(UserDTO.Email, UserDTO.Password);
+                if (UserDTO == null)
+                {
+                    throw new ArgumentNullException("An error  occurred while creating the user ");
+                }
+                Result<(string Email, string Password)> ValidatedUser = Helper.ToValidateUserCredentials(UserDTO.Email,UserDTO.Password);
+
+                if ((!ValidatedUser.IsValid))
+                {
+                    throw new ArgumentException("The user validation's failed");
+                }
+                
+                Result<User> NewUser = User.Create(ValidatedUser.Value.Email,ValidatedUser.Value.Password);
 
                 if (!NewUser.IsValid)
                 {
@@ -47,6 +60,10 @@ namespace My_Store.Services.UserServices
         {
             try
             {
+                if (UserDTO == null)
+                {
+                    throw new ArgumentNullException("An error  occurred while creating the user ");
+                }
                 //Acá tengo que ver si la validación va a ir en esta capa o en el controlador, porque al crear el usuario se vuelve a aplicar el hash ( Leer chat gpt)
                 Result<User> UserToLogIn = User.Create(UserDTO.Email,UserDTO.Password);
 
