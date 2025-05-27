@@ -27,14 +27,22 @@ namespace My_Store.Services.UserServices
                 {
                     throw new ArgumentNullException("An error  occurred while creating the user ");
                 }
-                Result<(string Email, string Password)> ValidatedUser = Helper.ToValidateUserCredentials(UserDTO.Email,UserDTO.Password);
+
+                Result<(string Email, string Password)> ValidatedUser = Helper.ToValidateUserCredentials(UserDTO.Email, UserDTO.Password);
 
                 if ((!ValidatedUser.IsValid))
                 {
                     throw new ArgumentException("The user validation's failed");
                 }
+
+                Result<string> PasswordHash = SecurityHelper.ToGetPasswordHash(ValidatedUser.Value.Password);
+
+                if (!PasswordHash.IsValid)
+                {
+                    throw new ArgumentException("The hashing process has failed");
+                }
                 
-                Result<User> NewUser = User.Create(ValidatedUser.Value.Email,ValidatedUser.Value.Password);
+                Result<User> NewUser = User.Create(ValidatedUser.Value.Email,PasswordHash.Value);
 
                 if (!NewUser.IsValid)
                 {
@@ -64,8 +72,24 @@ namespace My_Store.Services.UserServices
                 {
                     throw new ArgumentNullException("An error  occurred while creating the user ");
                 }
+
+                Result<(string Email, string Password)>ValidatedUser=Helper.ToValidateUserCredentials(UserDTO.Email,UserDTO.Password);
+
+                if (!ValidatedUser.IsValid)
+                {
+                    throw new ArgumentException("The user validation's failed");
+                }
+
+                Result<string> PasswordHash = SecurityHelper.ToGetPasswordHash(ValidatedUser.Value.Password);
+
+                if (!PasswordHash.IsValid)
+                {
+                    throw new ArgumentException("The hashing process has failed");
+                }
+
+
                 //Acá tengo que ver si la validación va a ir en esta capa o en el controlador, porque al crear el usuario se vuelve a aplicar el hash ( Leer chat gpt)
-                Result<User> UserToLogIn = User.Create(UserDTO.Email,UserDTO.Password);
+                Result<User> UserToLogIn = User.Create(ValidatedUser.Value.Email,PasswordHash.Value);
 
                 if (!UserToLogIn.IsValid)
                 {

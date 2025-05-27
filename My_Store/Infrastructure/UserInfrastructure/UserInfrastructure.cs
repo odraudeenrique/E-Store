@@ -34,7 +34,7 @@ namespace My_Store.Infrastructure.UserInfrastructure
                     Result<string> Email = Helper.ToValidateString((string)Reader["Email"]);
                     Result<TypeOfUser> UserType = Helper.GetUserType((int)Reader["UserType"]);
 
-                    if ( (!Id.IsValid)|| (!Email.IsValid) || (!UserType.IsValid) || (UserType.Value != TypeOfUser.Invalid) )
+                    if ( (!Id.IsValid)|| (!Email.IsValid) || (!UserType.IsValid) || (UserType.Value == TypeOfUser.Invalid) )
                     {
                         return null;
                     }

@@ -110,16 +110,17 @@ namespace My_Store.Shared.Helper
                 return Result<(string, string)>.Failed("The password must have 8 or more characteres");
             }
 
-            Result<string> HashPassword = SecurityHelper.SecurityHelper.ToGetPasswordHash(ValidatedPassword.Value);
+            //Result<string> HashPassword = SecurityHelper.SecurityHelper.ToGetPasswordHash(ValidatedPassword.Value);
 
-            if (!HashPassword.IsValid)
-            {
-                return Result<(string, string)>.Failed(HashPassword.Error);
-            }
+            //if (!HashPassword.IsValid)
+            //{
+            //    return Result<(string, string)>.Failed(HashPassword.Error);
+            //}
 
-            return Result<(string, string)>.Successful((ValidatedEmail.Value, HashPassword.Value));
+            return Result<(string, string)>.Successful((ValidatedEmail.Value, ValidatedPassword.Value));
 
         }
+        
         //Aca tengo que separar la creación del hash en otro método y mantener la validación de usuario separada de este
         public static Result<string> ToValidateUserCredentials(string Password)
         {
