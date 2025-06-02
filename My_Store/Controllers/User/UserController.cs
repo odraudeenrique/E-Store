@@ -23,21 +23,6 @@ namespace My_Store.Controllers.User
             _userService = new UserService();
         }
 
-
-        // GET: api/<UserController>
-        [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
-
-        // GET api/<UserController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
-
         // POST api/<UserController>
         [HttpPost]
         public async Task<ActionResult<UserResponseDTO>> Create([FromBody] UserCreateDTO User)
@@ -53,38 +38,6 @@ namespace My_Store.Controllers.User
                 ActionResult Status = BadRequest("Missing required user fields");
                 return Status;
             }
-            //using var Reader = new StreamReader(Request.Body);
-            //var Body = await Reader.ReadToEndAsync();
-
-            //if (string.IsNullOrEmpty(Body))
-            //{
-            //    ActionResult Status = BadRequest("The user is null");
-            //    return Status;
-            //}
-
-
-            //UserCreateDTO Aux = new UserCreateDTO();
-
-            //try
-            //{
-            //    Aux = JsonSerializer.Deserialize<UserCreateDTO>(Body, new JsonSerializerOptions
-            //    {
-            //        PropertyNameCaseInsensitive = true
-            //    });
-            //}
-            //catch (JsonException ex)
-            //{
-            //    ActionResult Status = BadRequest("Invalid JSON format");
-            //    return Status;
-            //}
-
-            //if ((Aux == null) || (string.IsNullOrEmpty(Aux.Email)) || (string.IsNullOrEmpty(Aux.Password)))
-            //{
-            //    ActionResult Status = BadRequest("Missing required user fields");
-            //    return Status;
-            //}
-
-
 
             try
             {
@@ -103,7 +56,7 @@ namespace My_Store.Controllers.User
 
         // POST api/<UserController>
         [HttpPost("Login")]
-        public async Task<ActionResult<UserResponseDTO>> Login([FromBody] UserCreateDTO User)
+        public async Task<ActionResult<UserResponseDTO>> Login([FromBody] UserUpdateDTO User)
         {
             if (User == null)
             {
@@ -145,22 +98,39 @@ namespace My_Store.Controllers.User
                 return Status;
             }
 
-
-
-
-            
         }
 
 
-
-
-
-
-        // PUT api/<UserController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        //PATCH /api/<UserController>
+        [HttpPatch]
+        public async Task<ActionResult<UserResponseDTO>> Update([FromBody]UserUpdateDTO User)
         {
+            if(User == null)
+            {
+                ActionResult Status = BadRequest("The user is null");
+                return Status;
+            }
+
+
+
+
+
+
+
+
+
+            return Ok();
+
         }
+
+
+
+
+        //// PUT api/<UserController>/5
+        //[HttpPut("{id}")]
+        //public void Put(int id, [FromBody] string value)
+        //{
+        //}
 
         // DELETE api/<UserController>/5
         [HttpDelete("{id}")]

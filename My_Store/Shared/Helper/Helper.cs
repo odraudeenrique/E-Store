@@ -110,14 +110,29 @@ namespace My_Store.Shared.Helper
                 return Result<(string, string)>.Failed("The password must have 8 or more characteres");
             }
 
-            //Result<string> HashPassword = SecurityHelper.SecurityHelper.ToGetPasswordHash(ValidatedPassword.Value);
-
-            //if (!HashPassword.IsValid)
-            //{
-            //    return Result<(string, string)>.Failed(HashPassword.Error);
-            //}
-
             return Result<(string, string)>.Successful((ValidatedEmail.Value, ValidatedPassword.Value));
+
+        }
+
+        public static Result<UserUpdateDTO> ToValidateUserCredentials(UserUpdateDTO User)
+        {
+            if (User == null)
+            {
+                return Result<UserUpdateDTO>.Failed("The user is null");
+            }
+
+            if((User.Email==null) || (User.UserType==null) || (User.UserType==TypeOfUser.Invalid))
+            {
+                return Result<UserUpdateDTO>.Failed("The email or the type is not valid");
+            }
+
+            Result<string> ValidatedFirstName = ToValidateString(User.Firstname);
+            Result<string> ValidatedLastName= ToValidateString(User.LastName);
+            Result<DateTime> ValidatedBirthday = ToValidateDate(User.Birthday);
+        }
+
+        public static Result<DateTime> ToValidateDate(DateTime Date)
+        {
 
         }
         

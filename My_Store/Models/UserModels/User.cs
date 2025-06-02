@@ -45,12 +45,6 @@ namespace My_Store.Models.UserModels
             {
                 return Result<User>.Failed("The credentials are not valid");
             }
-            //Result<string> PasswordHash = SecurityHelper.ToGetPasswordHash(ValidatedUserCredentials.Value.Password);
-
-            //if (!PasswordHash.IsValid)
-            //{
-            //    return Result<User>.Failed("There is an error on the hash");
-            //}
 
             User NewUser = new User
             {

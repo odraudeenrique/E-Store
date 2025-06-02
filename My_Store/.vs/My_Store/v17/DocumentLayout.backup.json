@@ -7,6 +7,10 @@
       "RelativeMoniker": "D:0:0:{06C94C77-0D1B-4AA0-9ABC-0FB9BD874790}|My_Store.csproj|solutionrelative:controllers\\user\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{06C94C77-0D1B-4AA0-9ABC-0FB9BD874790}|My_Store.csproj|c:\\users\\usuario\\onedrive\\escritorio\\programacion\\e_store\\my_store\\services\\userservices\\userservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{06C94C77-0D1B-4AA0-9ABC-0FB9BD874790}|My_Store.csproj|solutionrelative:services\\userservices\\userservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{06C94C77-0D1B-4AA0-9ABC-0FB9BD874790}|My_Store.csproj|c:\\users\\usuario\\onedrive\\escritorio\\programacion\\e_store\\my_store\\infrastructure\\userinfrastructure\\userinfrastructure.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{06C94C77-0D1B-4AA0-9ABC-0FB9BD874790}|My_Store.csproj|solutionrelative:infrastructure\\userinfrastructure\\userinfrastructure.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -17,10 +21,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{06C94C77-0D1B-4AA0-9ABC-0FB9BD874790}|My_Store.csproj|c:\\users\\usuario\\onedrive\\escritorio\\programacion\\e_store\\my_store\\infrastructure\\dataaccessinfrastructure\\dataaccess.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{06C94C77-0D1B-4AA0-9ABC-0FB9BD874790}|My_Store.csproj|solutionrelative:infrastructure\\dataaccessinfrastructure\\dataaccess.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{06C94C77-0D1B-4AA0-9ABC-0FB9BD874790}|My_Store.csproj|c:\\users\\usuario\\onedrive\\escritorio\\programacion\\e_store\\my_store\\services\\userservices\\userservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{06C94C77-0D1B-4AA0-9ABC-0FB9BD874790}|My_Store.csproj|solutionrelative:services\\userservices\\userservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{06C94C77-0D1B-4AA0-9ABC-0FB9BD874790}|My_Store.csproj|c:\\users\\usuario\\onedrive\\escritorio\\programacion\\e_store\\my_store\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -70,12 +70,11 @@
               "RelativeToolTip": "Shared\\SecurityHelper\\SecurityHelper.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-25T15:57:25.423Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-25T15:57:25.423Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 4,
               "Title": "DataAccess.cs",
               "DocumentMoniker": "C:\\Users\\Usuario\\OneDrive\\Escritorio\\Programacion\\E_Store\\My_Store\\Infrastructure\\DataAccessInfrastructure\\DataAccess.cs",
               "RelativeDocumentMoniker": "Infrastructure\\DataAccessInfrastructure\\DataAccess.cs",
@@ -83,8 +82,7 @@
               "RelativeToolTip": "Infrastructure\\DataAccessInfrastructure\\DataAccess.cs",
               "ViewState": "AgIAAFQAAAAAAAAAAAAewGgAAAAIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-23T17:04:32.545Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-23T17:04:32.545Z"
             },
             {
               "$type": "Document",
@@ -124,7 +122,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "Helper.cs",
               "DocumentMoniker": "C:\\Users\\Usuario\\OneDrive\\Escritorio\\Programacion\\E_Store\\My_Store\\Shared\\Helper\\Helper.cs",
               "RelativeDocumentMoniker": "Shared\\Helper\\Helper.cs",
@@ -132,8 +130,7 @@
               "RelativeToolTip": "Shared\\Helper\\Helper.cs",
               "ViewState": "AgIAAJkAAAAAAAAAAAAjwKUAAAAIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-23T14:55:27.089Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-23T14:55:27.089Z"
             },
             {
               "$type": "Document",
@@ -145,21 +142,19 @@
               "RelativeToolTip": "Models\\UserModels\\User.cs",
               "ViewState": "AgIAAB8AAAAAAAAAAAAuwCUAAAALAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-23T14:11:11.11Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-23T14:11:11.11Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "UserInfrastructure.cs",
               "DocumentMoniker": "C:\\Users\\Usuario\\OneDrive\\Escritorio\\Programacion\\E_Store\\My_Store\\Infrastructure\\UserInfrastructure\\UserInfrastructure.cs",
               "RelativeDocumentMoniker": "Infrastructure\\UserInfrastructure\\UserInfrastructure.cs",
               "ToolTip": "C:\\Users\\Usuario\\OneDrive\\Escritorio\\Programacion\\E_Store\\My_Store\\Infrastructure\\UserInfrastructure\\UserInfrastructure.cs",
               "RelativeToolTip": "Infrastructure\\UserInfrastructure\\UserInfrastructure.cs",
-              "ViewState": "AgIAAB4AAAAAAAAAAAAjwCQAAABlAAAAAAAAAA==",
+              "ViewState": "AgIAABMAAAAAAAAAAIA4wD8AAAAIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-21T19:55:00.046Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-21T19:55:00.046Z"
             },
             {
               "$type": "Document",
@@ -171,21 +166,19 @@
               "RelativeToolTip": "Program.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABYAAAAHAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-21T20:05:31.17Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-21T20:05:31.17Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 1,
               "Title": "UserService.cs",
               "DocumentMoniker": "C:\\Users\\Usuario\\OneDrive\\Escritorio\\Programacion\\E_Store\\My_Store\\Services\\UserServices\\UserService.cs",
               "RelativeDocumentMoniker": "Services\\UserServices\\UserService.cs",
               "ToolTip": "C:\\Users\\Usuario\\OneDrive\\Escritorio\\Programacion\\E_Store\\My_Store\\Services\\UserServices\\UserService.cs",
               "RelativeToolTip": "Services\\UserServices\\UserService.cs",
-              "ViewState": "AgIAAFoAAAAAAAAAAAAjwGQAAAAQAAAAAAAAAA==",
+              "ViewState": "AgIAAFoAAAAAAAAAAAAjwHEAAAAIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-16T22:11:06.917Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-16T22:11:06.917Z"
             },
             {
               "$type": "Document",
@@ -195,7 +188,7 @@
               "RelativeDocumentMoniker": "Controllers\\User\\UserController.cs",
               "ToolTip": "C:\\Users\\Usuario\\OneDrive\\Escritorio\\Programacion\\E_Store\\My_Store\\Controllers\\User\\UserController.cs",
               "RelativeToolTip": "Controllers\\User\\UserController.cs",
-              "ViewState": "AgIAAHYAAAAAAAAAAAAjwIEAAAAQAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-05-12T18:30:33.957Z",
               "EditorCaption": ""
