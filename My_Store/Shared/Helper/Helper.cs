@@ -100,6 +100,10 @@ namespace My_Store.Shared.Helper
             {
                 return Result<(string, string)>.Failed("The email is not valid");
             }
+            if (ValidatedEmail.Value.Length > 255)
+            {
+                return Result<(string, string)>.Failed("The email has more than 255 characters");
+            }
             if (!ValidatedPassword.IsValid)
             {
                 return Result<(string, string)>.Failed("The password is not valid");
@@ -114,27 +118,75 @@ namespace My_Store.Shared.Helper
 
         }
 
-        public static Result<UserUpdateDTO> ToValidateUserCredentials(UserUpdateDTO User)
+
+        public static Result<string?> ToValidateUserName(string? Aux)
         {
-            if (User == null)
+            if (string.IsNullOrWhiteSpace(Aux))
             {
-                return Result<UserUpdateDTO>.Failed("The user is null");
+                return Result<string?>.Failed("The field is null or empty");
+            }
+            if (Aux.Length > 100)
+            {
+                return Result<string?>.Failed("It should have less than 100 characters");
             }
 
-            if((User.Email==null) || (User.UserType==null) || (User.UserType==TypeOfUser.Invalid))
+            return Result<string?>.Successful(Aux);
+
+        }
+
+        public static Result<string?> ToValidateProfilePicture(string? Picture)
+        {
+            if (string.IsNullOrWhiteSpace(Picture))
             {
-                return Result<UserUpdateDTO>.Failed("The email or the type is not valid");
+                return Result<string?>.Failed("The picture field is empty");
             }
 
-            Result<string> ValidatedFirstName = ToValidateString(User.Firstname);
-            Result<string> ValidatedLastName= ToValidateString(User.LastName);
-            Result<DateTime> ValidatedBirthday = ToValidateDate(User.Birthday);
+            if (Picture.Length > 500)
+            {
+                return Result<string?>.Failed("The URL picture should have less than 500 characters");
+            }
+
+            return Result<string?>.Successful(Picture); 
         }
 
-        public static Result<DateTime> ToValidateDate(DateTime Date)
+        public static Result<DateTime?> ToValidateUserBirthday(DateTime? Date)
         {
+            if (!Date.HasValue)
+            {
+                return Result<DateTime?>.Failed("The date is null");
+            }
+            if (Date > DateTime.Now)
+            {
+                return Result<DateTime?>.Failed("The date is greater than the actual date");
+            }
+            if (Date < DateTime.Now.AddYears(-105))
+            {
+                return Result<DateTime?>.Failed("The date is not valid because it's too long ago");
+            }
+            if (Date > DateTime.Now.AddYears(-5))
+            {
+                return Result<DateTime?>.Failed("The date is too soon to be able to register");
+            }
 
+            return Result<DateTime?>.Successful(Date);
         }
+
+        public static Result<string> ToValidateUserEmail(string Email)
+        {
+            Result<string>ValidatedEmail= ToValidateString(Email);
+            if (!ValidatedEmail.IsValid)
+            {
+                return Result<string>.Failed("The email is empty");
+            }
+
+            if ((!ValidatedEmail.Value.Contains("@") )|| (!ValidatedEmail.Value.Contains(".com")))
+            {
+                return Result<string>.Failed("The email format is not valid");
+            }
+
+            return Result<string>.Successful(Email);
+        }
+      
         
         //Aca tengo que separar la creación del hash en otro método y mantener la validación de usuario separada de este
         public static Result<string> ToValidateUserCredentials(string Password)
@@ -173,6 +225,26 @@ namespace My_Store.Shared.Helper
                 case 2:
                     return Result<TypeOfUser>.Successful(TypeOfUser.Admin);
                 case 3:
+                    return Result<TypeOfUser>.Successful(TypeOfUser.Master);
+                default:
+                    return Result<TypeOfUser>.Successful(TypeOfUser.Invalid);
+
+            }
+        }
+        public static Result<TypeOfUser>ToValidateUserType(TypeOfUser UserType)
+        {
+
+            if (UserType == null)
+            {
+                return Result<TypeOfUser>.Failed("The user's type is null");
+            }
+            switch (UserType)
+            {
+                case TypeOfUser.Regular:
+                    return Result<TypeOfUser>.Successful(TypeOfUser.Regular);
+                case TypeOfUser.Admin:
+                    return Result<TypeOfUser>.Successful(TypeOfUser.Admin);
+                case TypeOfUser.Master:
                     return Result<TypeOfUser>.Successful(TypeOfUser.Master);
                 default:
                     return Result<TypeOfUser>.Successful(TypeOfUser.Invalid);

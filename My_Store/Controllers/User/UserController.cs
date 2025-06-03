@@ -56,7 +56,7 @@ namespace My_Store.Controllers.User
 
         // POST api/<UserController>
         [HttpPost("Login")]
-        public async Task<ActionResult<UserResponseDTO>> Login([FromBody] UserUpdateDTO User)
+        public async Task<ActionResult<UserResponseDTO>> Login([FromBody] UserCreateDTO User)
         {
             if (User == null)
             {
@@ -64,23 +64,13 @@ namespace My_Store.Controllers.User
                 return Status;
             }
 
-            Result<(string Email,string Password)> UserForLogIn = Helper.ToValidateUserCredentials(User.Email,User.Password);
-
-            if (!UserForLogIn.IsValid)
-            {
-                ActionResult Status = BadRequest("The credentials are not valid");
-            }
-
 
             try
             {
+                IUserService _IUserService = new UserService();
+               
 
-                IUserService<UserCreateDTO,UserResponseDTO> _IUserService = new UserService();
-                UserCreateDTO Aux= new UserCreateDTO();
-                Aux.Email = UserForLogIn.Value.Email;
-                Aux.Password = UserForLogIn.Value.Password;
-
-                UserResponseDTO LoggedUser=await  _IUserService.Login(Aux);
+                UserResponseDTO LoggedUser=await  _IUserService.Login(User);
 
                 if(LoggedUser == null)
                 {
@@ -103,7 +93,7 @@ namespace My_Store.Controllers.User
 
         //PATCH /api/<UserController>
         [HttpPatch]
-        public async Task<ActionResult<UserResponseDTO>> Update([FromBody]UserUpdateDTO User)
+        public async Task<ActionResult<UserResponseDTO>> Patch([FromBody]UserUpdateDTO User)
         {
             if(User == null)
             {
@@ -111,15 +101,20 @@ namespace My_Store.Controllers.User
                 return Status;
             }
 
+            try
+            {
+                IUserService _IUserService=new UserService();
+                UserResponseDTO UpdatedUser = await _IUserService.Update(User);  
 
+                ActionResult Status= StatusCode(200, UpdatedUser);
+                return Status;
 
-
-
-
-
-
-
-            return Ok();
+            }
+            catch(Exception Ex)
+            {
+                ActionResult Status = StatusCode(500, $"Internal server error: {Ex.Message}");
+                return Status;
+            }
 
         }
 

@@ -10,7 +10,7 @@ using My_Store.Shared.SecurityHelper;
 
 namespace My_Store.Services.UserServices    
 {
-    public class UserService : IService<UserCreateDTO,UserResponseDTO>, IUserService<UserCreateDTO,UserResponseDTO>
+    public class UserService : IService<UserCreateDTO,UserResponseDTO>, IUserService
     {
         private readonly IRepository<User,UserResponseDTO> _repository;
 
@@ -96,7 +96,7 @@ namespace My_Store.Services.UserServices
                     throw new ArgumentException("The user is not valid");
                 }
 
-                IUserRepository<User, UserResponseDTO> _IUserRepository=new UserInfrastructure();
+                IUserRepository _IUserRepository=new UserInfrastructure();
 
                 UserResponseDTO LoggedUser= await _IUserRepository.Login(UserToLogIn.Value);
 
@@ -114,9 +114,66 @@ namespace My_Store.Services.UserServices
         }
 
 
-        public void Update(UserCreateDTO UserDTO)
+        public async Task<UserResponseDTO> Update(UserUpdateDTO UserDTO)
         {
-            
+            if(UserDTO == null)
+            {
+                throw new ArgumentNullException("The user DTO is null");
+            }
+
+           
+
+            Result<int> ValidatedUserId = Helper.IsGreaterThanZero(UserDTO.Id);
+            Result<string>ValidatedUserEmail=Helper.ToValidateUserEmail(UserDTO.Email);
+            Result<TypeOfUser>ValidatedUserType=Helper.ToValidateUserType(UserDTO.UserType);
+
+            if (!ValidatedUserId.IsValid)
+            {
+                throw new ArgumentException("The user's Id is not valid");
+            }
+
+            if (!ValidatedUserEmail.IsValid)
+            {
+                throw new ArgumentException("The user's email is not valid");
+            }
+            if((!ValidatedUserType.IsValid ) || (ValidatedUserType.Value==TypeOfUser.Invalid))
+            {
+                throw new ArgumentException("The user's type is null or not valid");
+            }
+
+            User Aux = new User();
+            Aux.Id=ValidatedUserId.Value;
+            Aux.Email = ValidatedUserEmail.Value;
+            Aux.UserType= ValidatedUserType.Value;
+
+            Result<string?>ValidatedFirstName=Helper.ToValidateUserName(UserDTO.FirstName);
+            if (ValidatedFirstName.IsValid)
+            {
+                Aux.FirstName=ValidatedFirstName.Value;
+            }
+
+            Result<string?>ValidatedLastName=Helper.ToValidateUserName(UserDTO.LastName);
+            if (ValidatedLastName.IsValid)
+            {
+                Aux.LastName=ValidatedLastName.Value;
+            }
+
+            Result<DateTime?>ValidatedBirthday=Helper.ToValidateUserBirthday(UserDTO.Birthday);
+            if (ValidatedBirthday.IsValid)
+            {
+                Aux.Birthday=ValidatedBirthday.Value;
+            }
+
+            Result<string?>ValidatedProfilePicture=Helper.ToValidateProfilePicture(UserDTO.ProfilePicture);
+            if (ValidatedProfilePicture.IsValid)
+            {
+                Aux.ProfilePicture=ValidatedProfilePicture.Value;
+            }
+
+
+            //Acá tendría que llamar a la infraestructura para que actualice lo que tenga que actualizar en la base de datos y devolver el UserResponseDTO
+
+            return null;
         }
 
     }
