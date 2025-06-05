@@ -71,3 +71,34 @@ END
 
 
 
+CREATE PROCEDURE StoredPatchUser
+@Id INT,
+@FirstName NVARCHAR(100)=NULL,
+@LastName NVARCHAR(100)=NULL,
+@Birthday DATE=NULL,
+@ProfilePicture NVARCHAR(500)=NULL
+AS
+BEGIN
+	IF @Id IS NULL
+	BEGIN
+		RAISERROR ('The Id of the user is missing',16,1);
+		RETURN;
+	END
+
+	BEGIN TRY
+	UPDATE Users
+	SET
+		FirstName=ISNULL(@firstName,FirstName),
+		LastName=ISNULL(@LastName,LastName),
+		Birthday=ISNULL(@Birthday,Birthday),
+		PROFILEPICTURE=ISNULL(@ProfilePicture,ProfilePicture)
+		WHERE Id=@Id;
+	END TRY
+	BEGIN CATCH
+		THROW;
+	END CATCH;
+END
+
+
+
+

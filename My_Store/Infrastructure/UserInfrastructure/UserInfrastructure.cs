@@ -118,6 +118,58 @@ namespace My_Store.Infrastructure.UserInfrastructure
 
         public async Task<UserResponseDTO>Patch(User User)
         {
+            Data.ToSetProcedure("StoredPatchUser");
+            
+
+            if (User.Id != null)
+            {
+                Data.ToSetParameters("Id",User.Id); 
+            }
+            else
+            {
+                throw new ArgumentException("User's Id is missing and it's required");
+            }
+
+
+
+            if (User.FirstName != null)
+            {
+                Data.ToSetParameters("@FirstName", User.FirstName);
+            }
+            else
+            {
+                Data.ToSetParameters("@FirstName",DBNull.Value);
+            }
+
+            if(User.LastName != null)
+            {
+                Data.ToSetParameters("@LastName", User.LastName);
+            }
+            else
+            {
+                Data.ToSetParameters("@LastName", DBNull.Value);
+            }
+
+            if(User.Birthday != null)
+            {
+                Data.ToSetParameters("@Birthday",User.Birthday);
+            }
+            else
+            {
+                Data.ToSetParameters("@Birthday", DBNull.Value);
+            }
+
+            if (User.ProfilePicture!=null)
+            {
+                Data.ToSetParameters("@ProfilePicture", User.ProfilePicture);
+            }
+            else
+            {
+                Data.ToSetParameters("@ProfilePicture", DBNull.Value);
+            }
+
+
+            //Tengo que modificar el procedimiento para que me devuelva el usuario con sus datos actualizados 
 
 
             return null;

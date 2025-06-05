@@ -3,6 +3,7 @@ using My_Store.Models.UserModels;
 using My_Store.Shared.SecurityHelper;
 using System.Diagnostics.Metrics;
 using System.Runtime.CompilerServices;
+using System.Runtime.Intrinsics.X86;
 
 
 namespace My_Store.Shared.Helper
@@ -123,7 +124,7 @@ namespace My_Store.Shared.Helper
         {
             if (string.IsNullOrWhiteSpace(Aux))
             {
-                return Result<string?>.Failed("The field is null or empty");
+                return Result<string?>.Successful(null);
             }
             if (Aux.Length > 100)
             {
@@ -138,7 +139,7 @@ namespace My_Store.Shared.Helper
         {
             if (string.IsNullOrWhiteSpace(Picture))
             {
-                return Result<string?>.Failed("The picture field is empty");
+                return Result<string?>.Successful(null);
             }
 
             if (Picture.Length > 500)
@@ -153,7 +154,7 @@ namespace My_Store.Shared.Helper
         {
             if (!Date.HasValue)
             {
-                return Result<DateTime?>.Failed("The date is null");
+                return Result<DateTime?>.Successful(null);
             }
             if (Date > DateTime.Now)
             {

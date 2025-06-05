@@ -171,9 +171,18 @@ namespace My_Store.Services.UserServices
             }
 
 
-            //Acá tendría que llamar a la infraestructura para que actualice lo que tenga que actualizar en la base de datos y devolver el UserResponseDTO
+            IUserRepository Infrastructure= new UserInfrastructure();   
+            UserResponseDTO UpdatedUser= await Infrastructure.Patch(Aux);
 
-            return null;
+            if (UpdatedUser == null)
+            {
+                throw new ArgumentException("The user couldn't be update");
+            }
+
+            return UpdatedUser;
+
+
+           
         }
 
     }
