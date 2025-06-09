@@ -93,6 +93,9 @@ BEGIN
 		Birthday=ISNULL(@Birthday,Birthday),
 		PROFILEPICTURE=ISNULL(@ProfilePicture,ProfilePicture)
 		WHERE Id=@Id;
+
+	SELECT U.Id,U.Email,U.UserType,U.FirstName,U.LastName,U.Birthday,U.ProfilePicture FROM Users U WHERE U.Id=@Id;
+
 	END TRY
 	BEGIN CATCH
 		THROW;

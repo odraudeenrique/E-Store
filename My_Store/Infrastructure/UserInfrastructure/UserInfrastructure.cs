@@ -20,6 +20,7 @@ namespace My_Store.Infrastructure.UserInfrastructure
         public async Task<UserResponseDTO> Login(User User )
         {
             Data.ToSetProcedure("StoredToLogin");
+
             Data.ToSetParameters("@Email", User.Email);
             Data.ToSetParameters("@Password", User.Password);
 
@@ -68,6 +69,7 @@ namespace My_Store.Infrastructure.UserInfrastructure
             {
                 int RegularUserType = 1;
                 Data.ToSetProcedure("StoredToCreateUser");
+
                 Data.ToSetParameters("@Email", User.Email);
                 Data.ToSetParameters("@Password", User.Password);
                 Data.ToSetParameters("@TypeOfUser", RegularUserType);
@@ -94,7 +96,6 @@ namespace My_Store.Infrastructure.UserInfrastructure
 
                     return Aux; 
 
-                    //Tengo que arreglar lo que no se devuelve el usuario y además leer lo de http 
                 }
 
                 
@@ -116,63 +117,111 @@ namespace My_Store.Infrastructure.UserInfrastructure
             }
         }
 
-        public async Task<UserResponseDTO>Patch(User User)
+        public async Task<UserResponseDTO?>Patch(User User)
         {
-            Data.ToSetProcedure("StoredPatchUser");
+            try
+            {
+                Data.ToSetProcedure("StoredPatchUser");
             
 
-            if (User.Id != null)
-            {
-                Data.ToSetParameters("Id",User.Id); 
-            }
-            else
-            {
-                throw new ArgumentException("User's Id is missing and it's required");
-            }
+                if (User.Id != null)
+                {
+                    Data.ToSetParameters("@Id",User.Id); 
+                }
+                else
+                {
+                    throw new ArgumentException("User's Id is missing and it's required");
+                }
 
 
 
-            if (User.FirstName != null)
-            {
-                Data.ToSetParameters("@FirstName", User.FirstName);
-            }
-            else
-            {
-                Data.ToSetParameters("@FirstName",DBNull.Value);
-            }
+                if (User.FirstName != null)
+                {
+                    Data.ToSetParameters("@FirstName", User.FirstName);
+                }
+                else
+                {
+                    Data.ToSetParameters("@FirstName",DBNull.Value);
+                }
 
-            if(User.LastName != null)
-            {
-                Data.ToSetParameters("@LastName", User.LastName);
-            }
-            else
-            {
-                Data.ToSetParameters("@LastName", DBNull.Value);
-            }
+                if(User.LastName != null)
+                {
+                    Data.ToSetParameters("@LastName", User.LastName);
+                }
+                else
+                {
+                    Data.ToSetParameters("@LastName", DBNull.Value);
+                }
 
-            if(User.Birthday != null)
+                if(User.Birthday != null)
+                {
+                    Data.ToSetParameters("@Birthday",User.Birthday);
+                }
+                else
+                {
+                    Data.ToSetParameters("@Birthday", DBNull.Value);
+                }
+
+                if (User.ProfilePicture!=null)
+                {
+                    Data.ToSetParameters("@ProfilePicture", User.ProfilePicture);
+                }
+                else
+                {
+                    Data.ToSetParameters("@ProfilePicture", DBNull.Value);
+                }
+
+                var Reader = await Data.ToExecuteWithResult();
+
+                UserResponseDTO UpdatedUser = null;
+                while (await Reader.ReadAsync())
+                {
+                    Result<int> UserId = Helper.IsGreaterThanZero((int)Reader["Id"]);
+                    Result<string> UserEmail = Helper.ToValidateUserEmail((string)Reader["Email"]);
+                    Result<TypeOfUser> UserType = Helper.GetUserType((int)Reader["UserType"]);
+
+
+                    UpdatedUser = new UserResponseDTO();
+                    if((!UserId.IsValid) || (!UserEmail.IsValid) || (!UserType.IsValid))
+                    {
+                        return null;
+                    }
+
+                    UpdatedUser.Id=UserId.Value;
+                    UpdatedUser.Email = UserEmail.Value;
+                    UpdatedUser.UserType = UserType.Value;
+
+                    Result<string?> UserFirstName = Helper.ToValidateUserName(Reader["FirstName"]);
+                    UpdatedUser.FirstName = ((UserFirstName.IsValid) && (UserFirstName.Value != null))? UserFirstName.Value : null;
+
+                    Result<string?> UserLastName = Helper.ToValidateUserName(Reader["LastName"]);
+                    UpdatedUser.LastName = ((UserLastName.IsValid) && (UserLastName.Value != null))? UserLastName.Value : null;
+
+                    Result<DateTime?> UserBirthday = Helper.ToValidateUserBirthday(Reader["Birthday"]);
+                    UpdatedUser.Birthday = ((UserBirthday.IsValid) && (UserBirthday.Value != null)) ? UserBirthday.Value : null;
+
+                    Result<string?> UserProfilePicture = Helper.ToValidateProfilePicture(Reader["ProfilePicture"]);
+                    UpdatedUser.ProfilePicture = ((UserProfilePicture.IsValid) && (UserProfilePicture.Value != null)) ? UserProfilePicture.Value : null;
+
+                    return UpdatedUser;
+                }
+
+                    //This is going to be null if the it doesn´t enter to the loop
+                return UpdatedUser;
+
+            }catch(Exception ex)
             {
-                Data.ToSetParameters("@Birthday",User.Birthday);
+                ErrorInfo Error=ErrorInfo.FromException(ex);
+                ErrorLogger.LogToDatabase(Error);
+                throw;
             }
-            else
+            finally
             {
-                Data.ToSetParameters("@Birthday", DBNull.Value);
+                if (Data != null)
+                {
+                    await Data.DisposeAsync();  
+                }
             }
-
-            if (User.ProfilePicture!=null)
-            {
-                Data.ToSetParameters("@ProfilePicture", User.ProfilePicture);
-            }
-            else
-            {
-                Data.ToSetParameters("@ProfilePicture", DBNull.Value);
-            }
-
-
-            //Tengo que modificar el procedimiento para que me devuelva el usuario con sus datos actualizados 
-
-
-            return null;
         }
         //public void Update(User User)
         //{

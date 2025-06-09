@@ -120,56 +120,77 @@ namespace My_Store.Shared.Helper
         }
 
 
-        public static Result<string?> ToValidateUserName(string? Aux)
+        public static Result<string?> ToValidateUserName(Object? Aux)
         {
-            if (string.IsNullOrWhiteSpace(Aux))
+            if(Aux is null or DBNull)
+            {
+                return Result<string?>.Successful(null);
+
+            }
+
+            string? NameValue=Aux.ToString();
+            if (string.IsNullOrWhiteSpace(NameValue))
             {
                 return Result<string?>.Successful(null);
             }
-            if (Aux.Length > 100)
+
+
+            if (NameValue.Length > 100)
             {
                 return Result<string?>.Failed("It should have less than 100 characters");
             }
-
-            return Result<string?>.Successful(Aux);
+             
+            return Result<string?>.Successful(NameValue);
 
         }
 
-        public static Result<string?> ToValidateProfilePicture(string? Picture)
+        public static Result<string?> ToValidateProfilePicture(Object? Picture)
         {
-            if (string.IsNullOrWhiteSpace(Picture))
+            if(Picture is null or DBNull)
             {
                 return Result<string?>.Successful(null);
             }
 
-            if (Picture.Length > 500)
+            string? PictureValue = Picture.ToString();
+            if (string.IsNullOrWhiteSpace(PictureValue))
+            {
+                return Result<string?>.Successful(null);
+            }
+            
+            if (PictureValue.Length > 500)
             {
                 return Result<string?>.Failed("The URL picture should have less than 500 characters");
             }
 
-            return Result<string?>.Successful(Picture); 
+            return Result<string?>.Successful(PictureValue); 
         }
 
-        public static Result<DateTime?> ToValidateUserBirthday(DateTime? Date)
+        public static Result<DateTime?> ToValidateUserBirthday(Object? Date)
         {
-            if (!Date.HasValue)
+            if (Date is null or DBNull)
             {
                 return Result<DateTime?>.Successful(null);
             }
-            if (Date > DateTime.Now)
+
+            if (Date is not DateTime DateValue)
+            {
+                return Result<DateTime?>.Failed("Invalid date format");
+            }
+        
+            if (DateValue > DateTime.Now)
             {
                 return Result<DateTime?>.Failed("The date is greater than the actual date");
             }
-            if (Date < DateTime.Now.AddYears(-105))
+            if (DateValue < DateTime.Now.AddYears(-105))
             {
                 return Result<DateTime?>.Failed("The date is not valid because it's too long ago");
             }
-            if (Date > DateTime.Now.AddYears(-5))
+            if (DateValue > DateTime.Now.AddYears(-5))
             {
                 return Result<DateTime?>.Failed("The date is too soon to be able to register");
             }
 
-            return Result<DateTime?>.Successful(Date);
+            return Result<DateTime?>.Successful(DateValue);
         }
 
         public static Result<string> ToValidateUserEmail(string Email)

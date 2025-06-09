@@ -93,7 +93,7 @@ namespace My_Store.Controllers.User
 
         //PATCH /api/<UserController>
         [HttpPatch]
-        public async Task<ActionResult<UserResponseDTO>> Patch([FromBody]UserUpdateDTO User)
+        public async Task<ActionResult<UserResponseDTO?>> Patch([FromBody]UserUpdateDTO User)
         {
             if(User == null)
             {
@@ -104,7 +104,12 @@ namespace My_Store.Controllers.User
             try
             {
                 IUserService _IUserService=new UserService();
-                UserResponseDTO UpdatedUser = await _IUserService.Update(User);  
+                UserResponseDTO? UpdatedUser = await _IUserService.Patch(User); 
+                
+                if(UpdatedUser == null)
+                {
+                    return BadRequest("The user is not updated");
+                }
 
                 ActionResult Status= StatusCode(200, UpdatedUser);
                 return Status;

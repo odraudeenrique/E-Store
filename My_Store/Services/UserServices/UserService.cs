@@ -8,11 +8,11 @@ using My_Store.Services.Interfaces;
 using My_Store.Shared.Helper;
 using My_Store.Shared.SecurityHelper;
 
-namespace My_Store.Services.UserServices    
+namespace My_Store.Services.UserServices
 {
-    public class UserService : IService<UserCreateDTO,UserResponseDTO>, IUserService
+    public class UserService : IService<UserCreateDTO, UserResponseDTO>, IUserService
     {
-        private readonly IRepository<User,UserResponseDTO> _repository;
+        private readonly IRepository<User, UserResponseDTO> _repository;
 
         public UserService()
         {
@@ -41,8 +41,8 @@ namespace My_Store.Services.UserServices
                 {
                     throw new ArgumentException("The hashing process has failed");
                 }
-                
-                Result<User> NewUser = User.Create(ValidatedUser.Value.Email,PasswordHash.Value);
+
+                Result<User> NewUser = User.Create(ValidatedUser.Value.Email, PasswordHash.Value);
 
                 if (!NewUser.IsValid)
                 {
@@ -51,7 +51,7 @@ namespace My_Store.Services.UserServices
 
                 UserResponseDTO NewUserResponseDTO = await _repository.Create(NewUser.Value);
 
-                if(NewUserResponseDTO == null)
+                if (NewUserResponseDTO == null)
                 {
                     return null;
                 }
@@ -64,7 +64,7 @@ namespace My_Store.Services.UserServices
 
         }
 
-        public async Task<UserResponseDTO> Login (UserCreateDTO UserDTO)
+        public async Task<UserResponseDTO> Login(UserCreateDTO UserDTO)
         {
             try
             {
@@ -73,7 +73,7 @@ namespace My_Store.Services.UserServices
                     throw new ArgumentNullException("An error  occurred while creating the user ");
                 }
 
-                Result<(string Email, string Password)>ValidatedUser=Helper.ToValidateUserCredentials(UserDTO.Email,UserDTO.Password);
+                Result<(string Email, string Password)> ValidatedUser = Helper.ToValidateUserCredentials(UserDTO.Email, UserDTO.Password);
 
                 if (!ValidatedUser.IsValid)
                 {
@@ -89,18 +89,18 @@ namespace My_Store.Services.UserServices
 
 
                 //Acá tengo que ver si la validación va a ir en esta capa o en el controlador, porque al crear el usuario se vuelve a aplicar el hash ( Leer chat gpt)
-                Result<User> UserToLogIn = User.Create(ValidatedUser.Value.Email,PasswordHash.Value);
+                Result<User> UserToLogIn = User.Create(ValidatedUser.Value.Email, PasswordHash.Value);
 
                 if (!UserToLogIn.IsValid)
                 {
                     throw new ArgumentException("The user is not valid");
                 }
 
-                IUserRepository _IUserRepository=new UserInfrastructure();
+                IUserRepository _IUserRepository = new UserInfrastructure();
 
-                UserResponseDTO LoggedUser= await _IUserRepository.Login(UserToLogIn.Value);
+                UserResponseDTO LoggedUser = await _IUserRepository.Login(UserToLogIn.Value);
 
-                if(LoggedUser == null)
+                if (LoggedUser == null)
                 {
                     throw new ArgumentException("The user is not valid");
                 }
@@ -114,18 +114,18 @@ namespace My_Store.Services.UserServices
         }
 
 
-        public async Task<UserResponseDTO> Update(UserUpdateDTO UserDTO)
+        public async Task<UserResponseDTO?> Patch(UserUpdateDTO UserDTO)
         {
-            if(UserDTO == null)
+            if (UserDTO == null)
             {
                 throw new ArgumentNullException("The user DTO is null");
             }
 
-           
+
 
             Result<int> ValidatedUserId = Helper.IsGreaterThanZero(UserDTO.Id);
-            Result<string>ValidatedUserEmail=Helper.ToValidateUserEmail(UserDTO.Email);
-            Result<TypeOfUser>ValidatedUserType=Helper.ToValidateUserType(UserDTO.UserType);
+            Result<string> ValidatedUserEmail = Helper.ToValidateUserEmail(UserDTO.Email);
+            Result<TypeOfUser> ValidatedUserType = Helper.ToValidateUserType(UserDTO.UserType);
 
             if (!ValidatedUserId.IsValid)
             {
@@ -136,53 +136,61 @@ namespace My_Store.Services.UserServices
             {
                 throw new ArgumentException("The user's email is not valid");
             }
-            if((!ValidatedUserType.IsValid ) || (ValidatedUserType.Value==TypeOfUser.Invalid))
+            if ((!ValidatedUserType.IsValid) || (ValidatedUserType.Value == TypeOfUser.Invalid))
             {
                 throw new ArgumentException("The user's type is null or not valid");
             }
 
             User Aux = new User();
-            Aux.Id=ValidatedUserId.Value;
+            Aux.Id = ValidatedUserId.Value;
             Aux.Email = ValidatedUserEmail.Value;
-            Aux.UserType= ValidatedUserType.Value;
+            Aux.UserType = ValidatedUserType.Value;
 
-            Result<string?>ValidatedFirstName=Helper.ToValidateUserName(UserDTO.FirstName);
-            if (ValidatedFirstName.IsValid)
+            Result<string?> ValidatedFirstName = Helper.ToValidateUserName(UserDTO.FirstName);
+            if (ValidatedFirstName.Value!=null)
             {
-                Aux.FirstName=ValidatedFirstName.Value;
+                Aux.FirstName = ValidatedFirstName.Value;
             }
 
-            Result<string?>ValidatedLastName=Helper.ToValidateUserName(UserDTO.LastName);
-            if (ValidatedLastName.IsValid)
+            Result<string?> ValidatedLastName = Helper.ToValidateUserName(UserDTO.LastName);
+            if (ValidatedLastName.Value!=null)
             {
-                Aux.LastName=ValidatedLastName.Value;
+                Aux.LastName = ValidatedLastName.Value;
             }
 
-            Result<DateTime?>ValidatedBirthday=Helper.ToValidateUserBirthday(UserDTO.Birthday);
-            if (ValidatedBirthday.IsValid)
+            Result<DateTime?> ValidatedBirthday = Helper.ToValidateUserBirthday(UserDTO.Birthday);
+            if (ValidatedBirthday.Value != null )
             {
-                Aux.Birthday=ValidatedBirthday.Value;
+                Aux.Birthday = ValidatedBirthday.Value;
             }
 
-            Result<string?>ValidatedProfilePicture=Helper.ToValidateProfilePicture(UserDTO.ProfilePicture);
-            if (ValidatedProfilePicture.IsValid)
+            Result<string?> ValidatedProfilePicture = Helper.ToValidateProfilePicture(UserDTO.ProfilePicture);
+            if (ValidatedProfilePicture.Value!=null)
             {
-                Aux.ProfilePicture=ValidatedProfilePicture.Value;
+                Aux.ProfilePicture = ValidatedProfilePicture.Value;
+            }
+
+            try
+            {
+                IUserRepository Infrastructure = new UserInfrastructure();
+                UserResponseDTO? UpdatedUser = await Infrastructure.Patch(Aux);
+
+
+                if (UpdatedUser == null)
+                {
+                    throw new ArgumentException("The user couldn't be update");
+                }
+
+                return UpdatedUser;
+            }
+            catch (Exception ex)
+            {
+                throw new ArgumentException("An error occurred while updating the user");
             }
 
 
-            IUserRepository Infrastructure= new UserInfrastructure();   
-            UserResponseDTO UpdatedUser= await Infrastructure.Patch(Aux);
-
-            if (UpdatedUser == null)
-            {
-                throw new ArgumentException("The user couldn't be update");
-            }
-
-            return UpdatedUser;
 
 
-           
         }
 
     }
