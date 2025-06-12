@@ -17,6 +17,95 @@ namespace My_Store.Infrastructure.UserInfrastructure
         {
             Data = new DataAccess();
         }
+
+        public async Task<UserResponseDTO?>GetById(int Id)
+        {
+            Data.ToSetProcedure("GetById");
+            Data.ToSetParameters("@Id", Id);
+
+            try
+            {
+                SqlDataReader Reader =await  Data.ToRead();
+
+                while (await Reader.ReadAsync())
+                {
+                    UserResponseDTO User = new UserResponseDTO();
+
+
+                    Result<int> UserId = Helper.IsGreaterThanZero((int)Reader["Id"]);
+                    Result<string> UserEmail = Helper.ToValidateUserEmail((string)Reader["Email"]);
+                    Result<TypeOfUser> UserType = Helper.GetUserType((int)Reader["UserType"]);
+
+                    if((!UserId.IsValid)||(!UserEmail.IsValid)|| (!UserType.IsValid))
+                    {
+                        return null;
+                    }
+
+                    User.Id = UserId.Value;
+                    User.Email = UserEmail.Value;
+                    User.UserType = UserType.Value;
+
+                    Result<string?> UserFirstName = Helper.ToValidateUserName(Reader["FirstName"]);
+                    if((UserFirstName.IsValid)&& (UserFirstName != null))
+                    {
+                        User.FirstName = UserFirstName.Value;
+                    }
+                    else
+                    {
+                        User.FirstName = null;
+                    }
+
+                    Result<string?> UserLastName = Helper.ToValidateUserName(Reader["LastName"]);
+                    if ((UserLastName.IsValid) && (UserLastName!=null))
+                    {
+                        User.LastName = UserLastName.Value;
+                    }
+                    else
+                    {
+                        User.LastName = null;
+                    }
+
+                    Result<DateTime?> UserBirthday = Helper.ToValidateUserBirthday(Reader["Birthday"]);
+                    if ((UserBirthday.IsValid) && (UserBirthday != null))
+                    {
+                        User.Birthday = UserBirthday.Value;
+                    }
+                    else
+                    {
+                        User.Birthday = null;
+                    }
+
+                    Result<string?> UserProfilePicture = Helper.ToValidateProfilePicture(Reader["ProfilePicture"]);
+                    if ((UserProfilePicture.IsValid) && (UserProfilePicture!=null))
+                    {
+                        User.ProfilePicture = UserProfilePicture.Value;
+                    }
+                    else
+                    {
+                        User.ProfilePicture = null;
+                    }
+
+                    return User;
+
+                }
+
+                return null;
+            }catch(Exception Ex)
+            {
+                ErrorInfo Error=ErrorInfo.FromException(Ex);
+                ErrorLogger.LogToDatabase(Error);
+                throw;
+            }
+            finally
+            {
+                if(Data != null)
+                {
+                    await Data.DisposeAsync();
+                }
+            }
+
+            
+        }
         public async Task<UserResponseDTO> Login(User User )
         {
             Data.ToSetProcedure("StoredToLogin");
@@ -223,9 +312,6 @@ namespace My_Store.Infrastructure.UserInfrastructure
                 }
             }
         }
-        //public void Update(User User)
-        //{
-
-        //}
+        
     }
 }

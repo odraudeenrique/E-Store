@@ -23,6 +23,39 @@ namespace My_Store.Controllers.User
             _userService = new UserService();
         }
 
+        //GET api/<UserController>
+        [HttpGet("{Id}")]
+        public async Task<ActionResult<UserResponseDTO>> GetById(int Id) 
+        { 
+            if( Id<=0)
+            {
+                ActionResult Status = BadRequest("The Id is null or not valid");
+                return Status;  
+            }
+
+            try
+            {
+                IUserService UserService= new UserService();    
+                UserResponseDTO User = await UserService.GetById(Id);
+
+                if(User == null)
+                {
+                    return  NotFound(); 
+                }
+                
+                ActionResult Status = StatusCode(200, User);
+                return Status;
+            }catch(Exception Ex)
+            {
+                ActionResult Status = StatusCode(500, $"Internal Error: {Ex.Message}");
+                return Status;  
+            }
+
+
+        }
+
+
+
         // POST api/<UserController>
         [HttpPost]
         public async Task<ActionResult<UserResponseDTO>> Create([FromBody] UserCreateDTO User)
@@ -124,15 +157,6 @@ namespace My_Store.Controllers.User
         }
 
 
-
-
-        //// PUT api/<UserController>/5
-        //[HttpPut("{id}")]
-        //public void Put(int id, [FromBody] string value)
-        //{
-        //}
-
-        // DELETE api/<UserController>/5
         [HttpDelete("{id}")]
         public void Delete(int id)
         {

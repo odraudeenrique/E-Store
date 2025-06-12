@@ -210,7 +210,6 @@ namespace My_Store.Shared.Helper
         }
       
         
-        //Aca tengo que separar la creación del hash en otro método y mantener la validación de usuario separada de este
         public static Result<string> ToValidateUserCredentials(string Password)
         {
             Result<string> ValidatedPassword = ToValidateString(Password);

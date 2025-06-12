@@ -19,6 +19,33 @@ namespace My_Store.Services.UserServices
             _repository = new UserInfrastructure();
         }
 
+        public async Task<UserResponseDTO>GetById(int Id)
+        {
+            Result<int>UserId=Helper.IsGreaterThanZero(Id);
+
+            if (!UserId.IsValid)
+            {
+                throw new ArgumentException("The Id is invalid");
+            }
+
+            try
+            {
+                IUserRepository UserRepository=new UserInfrastructure();
+                UserResponseDTO? UserById = await UserRepository.GetById(UserId.Value);
+
+                if(UserById == null)
+                {
+                    return null;
+                }
+                return UserById;
+
+            }catch (Exception ex)
+            {
+                throw new Exception("The user couldn't be gotten from the database");
+            }
+        }
+
+
         public async Task<UserResponseDTO> Create(UserCreateDTO UserDTO)
         {
             try
@@ -88,7 +115,6 @@ namespace My_Store.Services.UserServices
                 }
 
 
-                //Acá tengo que ver si la validación va a ir en esta capa o en el controlador, porque al crear el usuario se vuelve a aplicar el hash ( Leer chat gpt)
                 Result<User> UserToLogIn = User.Create(ValidatedUser.Value.Email, PasswordHash.Value);
 
                 if (!UserToLogIn.IsValid)
