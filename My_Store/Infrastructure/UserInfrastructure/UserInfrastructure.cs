@@ -103,8 +103,6 @@ namespace My_Store.Infrastructure.UserInfrastructure
                     await Data.DisposeAsync();
                 }
             }
-
-            
         }
         public async Task<UserResponseDTO> Login(User User )
         {

@@ -117,6 +117,28 @@ BEGIN
 END
 
 
+CREATE PROCEDURE EmailExists
+@Email NVARCHAR(255)
+AS
+BEGIN
+	IF (@Email IS NULL OR LTRIM(RTRIM(@Email))='')
+	BEGIN
+		RAISERROR('The email is null or empty',16,1);
+		return;
+	END
+
+	BEGIN TRY
+		IF EXISTS(SELECT 1 FROM Users U WHERE Email=@Email)
+			SELECT CAST(1 AS BIT) AS ItExists ;
+		ELSE
+			SELECT CAST(0 AS BIT) AS ItExists ;
+	END TRY
+	BEGIN CATCH
+		THROW;
+	END CATCH
+END
+
+
 
 
 
