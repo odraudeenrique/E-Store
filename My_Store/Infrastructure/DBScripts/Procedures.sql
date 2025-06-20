@@ -104,6 +104,19 @@ BEGIN
 END
 
 
+CREATE PROCEDURE GetAll
+as
+BEGIN
+	SET NOCOUNT ON;
+	BEGIN TRY
+		SELECT U.Id,U.Email,U.UserType,U.FirstName,U.LastName,U.Birthday,U.ProfilePicture FROM Users U
+	END TRY
+	BEGIN CATCH
+		THROW;
+	END CATCH
+END
+
+
 CREATE PROCEDURE GetById
 @Id int
 as

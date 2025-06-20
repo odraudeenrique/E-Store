@@ -23,6 +23,33 @@ namespace My_Store.Controllers.User
             _userService = new UserService();
         }
 
+
+
+        //GET api/<UserController>
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<UserResponseDTO>>> GetAll()
+        {
+            try
+            {
+                IUserService UserService= new UserService();
+                IEnumerable<UserResponseDTO> Users = await UserService.GetAll();
+
+                if (!Users.Any())
+                {
+                    return NotFound("Not users found");
+                }
+
+                ActionResult Status = StatusCode(200, Users);
+                return Status;
+
+            }catch (Exception Ex)
+            {
+                ActionResult Status = StatusCode(500, $"An error has occoured: {Ex.Message}");
+                return Status;
+            }
+
+        }
+
         //GET api/<UserController>
         [HttpGet("{Id}")]
         public async Task<ActionResult<UserResponseDTO>> GetById(int Id) 

@@ -20,6 +20,95 @@ namespace My_Store.Infrastructure.UserInfrastructure
             Data = new DataAccess();
         }
 
+        public async Task<IEnumerable<UserResponseDTO>> GetAll()
+        {
+            Data.ToSetProcedure("GetAll");
+            try
+            {
+                SqlDataReader Reader= await Data.ToRead();
+                List<UserResponseDTO> Users = new List<UserResponseDTO>();
+
+                while (Reader.Read())
+                {
+                    Result<int> UserId = Helper.IsGreaterThanZero((int)Reader["Id"]);
+                    Result<string> UserEmail = Helper.ToValidateUserEmail((string)Reader["Email"]);
+                    Result<TypeOfUser> UserType = Helper.GetUserType((int)Reader["UserType"]);
+
+
+                    if (((!UserId.IsValid) || (!UserEmail.IsValid) ) || ((!UserType.IsValid) && (UserType.Value!=TypeOfUser.Invalid)))
+                    {
+                        continue;
+                    }
+
+                    UserResponseDTO Aux= new UserResponseDTO();
+
+                    Aux.Id=UserId.Value;
+                    Aux.Email = UserEmail.Value;
+                    Aux.UserType = UserType.Value;
+
+                    Result<string?> UserFirstName = Helper.ToValidateUserName(Reader["FirstName"]);
+                    if ((UserFirstName.IsValid) && (UserFirstName!=null))
+                    {
+                        Aux.FirstName = UserFirstName.Value;
+                    }
+                    else
+                    {
+                        Aux.FirstName = null;
+                    }
+
+                    Result<string?> UserLastName = Helper.ToValidateUserName(Reader["LastName"]);
+                    if ((UserLastName.IsValid) && (UserLastName != null))
+                    {
+                        Aux.LastName = UserLastName.Value;
+                    }
+                    else
+                    {
+                        Aux.LastName = null;
+                    }
+
+                    Result<DateTime?> UserBirthday = Helper.ToValidateUserBirthday(Reader["Birthday"]);
+                    if ((UserBirthday.IsValid) && (UserBirthday!=null))
+                    {
+                        Aux.Birthday = UserBirthday.Value;
+                    }
+                    else
+                    {
+                        Aux.Birthday = null;
+                    }
+
+                    Result<string?> UserProfilePicture = Helper.ToValidateProfilePicture(Reader["ProfilePicture"]);
+                    if ((UserProfilePicture.IsValid) && (UserProfilePicture!=null))
+                    {
+                        Aux.ProfilePicture=UserProfilePicture.Value;
+                    }
+                    else
+                    {
+                        Aux.ProfilePicture = null;
+                    }
+                    //Acá tengo que ver bien cómo manejo esto y si lo haré con el yield return
+                    Users.Add(Aux);
+
+                }
+
+                return Users;
+
+            }catch (Exception ex)
+            {
+                ErrorInfo Error=ErrorInfo.FromException(ex);
+                ErrorLogger.LogToDatabase(Error);
+                throw;
+            }
+            finally
+            {
+                if (Data != null)
+                {
+                    await Data.DisposeAsync();
+                }
+            }
+
+        }
+
+
         public async Task<UserResponseDTO?> GetById(int Id)
         {
             Data.ToSetProcedure("GetById");

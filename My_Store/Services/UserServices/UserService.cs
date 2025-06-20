@@ -20,7 +20,23 @@ namespace My_Store.Services.UserServices
             _repository = new UserInfrastructure();
         }
 
-        public async Task<UserResponseDTO>GetById(int Id)
+        public async Task<IEnumerable<UserResponseDTO>> GetAll()
+        {
+            try
+            {
+                IUserRepository UserRepository = new UserInfrastructure();
+                IEnumerable<UserResponseDTO> Users =await  UserRepository.GetAll();
+
+                return Users;
+            }catch (Exception Ex)
+            {
+                throw new Exception($"An error has occourred:{Ex.Message}");
+            }
+
+        }
+
+
+        public async Task<UserResponseDTO> GetById(int Id)
         {
             Result<int>UserId=Helper.IsGreaterThanZero(Id);
 
