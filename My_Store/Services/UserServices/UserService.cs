@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using My_Store.Infrastructure.ErrorInfrastructure;
 using My_Store.Infrastructure.Interfaces;
@@ -39,9 +40,9 @@ namespace My_Store.Services.UserServices
                 }
                 return UserById;
 
-            }catch (Exception ex)
+            }catch (Exception Ex)
             {
-                throw new Exception("The user couldn't be gotten from the database");
+                throw new Exception($"The user couldn't be gotten from the database:{Ex.Message}");
             }
         }
 
@@ -84,9 +85,9 @@ namespace My_Store.Services.UserServices
                 }
                 return NewUserResponseDTO;
             }
-            catch
+            catch(Exception ex) 
             {
-                throw new ArgumentException("An error occurred while creating the user");
+                throw new Exception($"An error occourred: {ex.Message}");
             }
 
         }
@@ -135,7 +136,8 @@ namespace My_Store.Services.UserServices
             }
             catch (Exception Ex)
             {
-                throw new ArgumentException("An error occurred while creating the user");
+                throw new Exception($"An error occurred:{Ex.Message}");
+                
             }
         }
 
@@ -211,11 +213,36 @@ namespace My_Store.Services.UserServices
             }
             catch (Exception ex)
             {
-                throw new ArgumentException("An error occurred while updating the user");
+                throw new Exception($"An error occourred:{ex.Message}");
             }
 
+        }
 
+        public async Task<bool> EmailExists(string Email)
+        {
+            Result<string> EmailForEvaluate= Helper.ToValidateUserEmail(Email);
+            if (!EmailForEvaluate.IsValid)
+            {
+                throw new ArgumentException("The email is null or empty");
+            }
 
+            try
+            {
+
+                IUserRepository UserRepository= new UserInfrastructure();
+                bool ItExists = await UserRepository.EmailExists(EmailForEvaluate.Value);
+
+                if (!ItExists)
+                {
+                    return false;
+                }
+
+                return true;
+
+            }catch (Exception ex)
+            {
+                throw new Exception($"An error occourred: {ex.Message}");
+            }
 
         }
 

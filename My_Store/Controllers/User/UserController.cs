@@ -53,10 +53,11 @@ namespace My_Store.Controllers.User
 
 
         }
-            //Acá tengo que corregir la ruta y colocar que sea fromquery en los parámetros del método. 
+
+
         //GET api/<UserController>
-        [HttpGet("{Email}")]
-        public async Task<ActionResult<bool>>EmailExists(string Email)
+        [HttpGet("EmailExists")]
+        public async Task<ActionResult<bool>>EmailExists([FromQuery] string Email)
         {
             if (string.IsNullOrEmpty(Email))
             {
@@ -67,6 +68,7 @@ namespace My_Store.Controllers.User
             {
                 IUserService UserService = new UserService();
                 bool ItExists = await UserService.EmailExists(Email);
+
                 ActionResult Status = null;
 
                 if (!ItExists)
