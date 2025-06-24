@@ -85,7 +85,6 @@ namespace My_Store.Infrastructure.UserInfrastructure
                     {
                         Aux.ProfilePicture = null;
                     }
-                    //Acá tengo que ver bien cómo manejo esto y si lo haré con el yield return
                     Users.Add(Aux);
 
                 }
