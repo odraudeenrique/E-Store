@@ -11,21 +11,21 @@ using My_Store.Shared.SecurityHelper;
 
 namespace My_Store.Services.UserServices
 {
-    public class UserService : IService<UserCreateDTO, UserResponseDTO>, IUserService
+    public class UserService :  IUserService
     {
-        private readonly IRepository<User, UserResponseDTO> _repository;
+        private readonly IUserRepository _userRepository;
 
-        public UserService()
+        public UserService(IUserRepository UserRepository)
         {
-            _repository = new UserInfrastructure();
+            _userRepository = UserRepository;
         }
 
         public async Task<IEnumerable<UserResponseDTO>> GetAll()
         {
             try
             {
-                IUserRepository UserRepository = new UserInfrastructure();
-                IEnumerable<UserResponseDTO> Users =await  UserRepository.GetAll();
+                //IUserRepository UserRepository = new UserInfrastructure();
+                IEnumerable<UserResponseDTO> Users =await _userRepository.GetAll();
 
                 return Users;
             }catch (Exception Ex)
@@ -47,8 +47,8 @@ namespace My_Store.Services.UserServices
 
             try
             {
-                IUserRepository UserRepository=new UserInfrastructure();
-                UserResponseDTO? UserById = await UserRepository.GetById(UserId.Value);
+                //IUserRepository UserRepository=new UserInfrastructure();
+                UserResponseDTO? UserById = await _userRepository.GetById(UserId.Value);
 
                 if(UserById == null)
                 {
@@ -93,7 +93,7 @@ namespace My_Store.Services.UserServices
                     throw new ArgumentException("The user is not valid");
                 }
 
-                UserResponseDTO NewUserResponseDTO = await _repository.Create(NewUser.Value);
+                UserResponseDTO NewUserResponseDTO = await _userRepository.Create(NewUser.Value);
 
                 if (NewUserResponseDTO == null)
                 {
@@ -139,9 +139,9 @@ namespace My_Store.Services.UserServices
                     throw new ArgumentException("The user is not valid");
                 }
 
-                IUserRepository _IUserRepository = new UserInfrastructure();
+                //IUserRepository _IUserRepository = new UserInfrastructure();
 
-                UserResponseDTO LoggedUser = await _IUserRepository.Login(UserToLogIn.Value);
+                UserResponseDTO LoggedUser = await _userRepository.Login(UserToLogIn.Value);
 
                 if (LoggedUser == null)
                 {
@@ -216,8 +216,8 @@ namespace My_Store.Services.UserServices
 
             try
             {
-                IUserRepository Infrastructure = new UserInfrastructure();
-                UserResponseDTO? UpdatedUser = await Infrastructure.Patch(Aux);
+                //IUserRepository Infrastructure = new UserInfrastructure();
+                UserResponseDTO? UpdatedUser = await _userRepository.Patch(Aux);
 
 
                 if (UpdatedUser == null)
@@ -245,8 +245,8 @@ namespace My_Store.Services.UserServices
             try
             {
 
-                IUserRepository UserRepository= new UserInfrastructure();
-                bool ItExists = await UserRepository.EmailExists(EmailForEvaluate.Value);
+                //IUserRepository UserRepository= new UserInfrastructure();
+                bool ItExists = await _userRepository.EmailExists(EmailForEvaluate.Value);
 
                 if (!ItExists)
                 {

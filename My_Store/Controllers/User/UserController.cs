@@ -16,11 +16,11 @@ namespace My_Store.Controllers.User
     [ApiController]
     public class UserController : ControllerBase        
     {
-        private readonly IService<UserCreateDTO, UserResponseDTO> _userService;
+        private readonly IUserService _userService;
 
-        public UserController()
+        public UserController(IUserService UserService)
         {
-            _userService = new UserService();
+            _userService = UserService;
         }
 
 
@@ -31,8 +31,8 @@ namespace My_Store.Controllers.User
         {
             try
             {
-                IUserService UserService= new UserService();
-                IEnumerable<UserResponseDTO> Users = await UserService.GetAll();
+                //IUserService UserService= new UserService();
+                IEnumerable<UserResponseDTO> Users = await _userService.GetAll();
 
                 if (!Users.Any())
                 {
@@ -62,8 +62,8 @@ namespace My_Store.Controllers.User
 
             try
             {
-                IUserService UserService= new UserService();    
-                UserResponseDTO User = await UserService.GetById(Id);
+                //IUserService UserService= new UserService();    
+                UserResponseDTO User = await _userService.GetById(Id);
 
                 if(User == null)
                 {
@@ -93,8 +93,8 @@ namespace My_Store.Controllers.User
             }
             try
             {
-                IUserService UserService = new UserService();
-                bool ItExists = await UserService.EmailExists(Email);
+                //IUserService UserService = new UserService();
+                bool ItExists = await _userService.EmailExists(Email);
 
                 ActionResult Status = null;
 
@@ -161,10 +161,10 @@ namespace My_Store.Controllers.User
 
             try
             {
-                IUserService _IUserService = new UserService();
+                //IUserService _IUserService = new UserService();
                
 
-                UserResponseDTO LoggedUser=await  _IUserService.Login(User);
+                UserResponseDTO LoggedUser=await _userService.Login(User);
 
                 if(LoggedUser == null)
                 {
@@ -197,8 +197,8 @@ namespace My_Store.Controllers.User
 
             try
             {
-                IUserService _IUserService=new UserService();
-                UserResponseDTO? UpdatedUser = await _IUserService.Patch(User); 
+                //IUserService _IUserService=new UserService();
+                UserResponseDTO? UpdatedUser = await _userService.Patch(User); 
                 
                 if(UpdatedUser == null)
                 {

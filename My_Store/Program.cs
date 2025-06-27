@@ -1,3 +1,10 @@
+using Microsoft.AspNetCore.Mvc.Formatters;
+using My_Store.Infrastructure.Interfaces;
+using My_Store.Infrastructure.UserInfrastructure;
+using My_Store.Models.UserModels;
+using My_Store.Services.Interfaces;
+using My_Store.Services.UserServices;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // CORS
@@ -19,6 +26,13 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+
+
+//Dependency injection
+builder.Services.AddScoped<IUserService,UserService>();
+builder.Services.AddScoped<IUserRepository,UserInfrastructure>();
+
 
 // CORS
 app.UseCors("AllowAll");

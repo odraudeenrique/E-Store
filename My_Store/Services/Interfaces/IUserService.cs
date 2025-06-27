@@ -4,6 +4,7 @@ namespace My_Store.Services.Interfaces
 {
     public interface IUserService
     {
+        Task<UserResponseDTO> Create(UserCreateDTO User);
         Task<IEnumerable<UserResponseDTO>> GetAll();
         Task<UserResponseDTO?> GetById(int Id);
         Task<UserResponseDTO> Login(UserCreateDTO User);

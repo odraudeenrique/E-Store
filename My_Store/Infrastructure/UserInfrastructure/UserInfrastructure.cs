@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Routing.Tree;
 
 namespace My_Store.Infrastructure.UserInfrastructure
 {
-    public class UserInfrastructure : IRepository<User, UserResponseDTO>, IUserRepository
+    public class UserInfrastructure : IUserRepository
     {
         private DataAccess _data;
         private DataAccess Data { get { return this._data; } set { this._data = value; } }

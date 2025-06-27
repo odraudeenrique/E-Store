@@ -4,6 +4,7 @@ namespace My_Store.Infrastructure.Interfaces
 {
     public interface IUserRepository
     {
+        Task<UserResponseDTO> Create(User user);   
         Task<IEnumerable<UserResponseDTO>> GetAll();
         Task<UserResponseDTO> GetById(int Id);
         Task<UserResponseDTO>Login(User User);
