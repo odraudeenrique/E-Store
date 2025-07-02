@@ -36,7 +36,7 @@ namespace My_Store.Services.UserServices
         }
 
 
-        public async Task<UserResponseDTO> GetById(int Id)
+        public async Task<UserResponseDTO?> GetById(int Id)
         {
             Result<int>UserId=Helper.IsGreaterThanZero(Id);
 
@@ -47,6 +47,7 @@ namespace My_Store.Services.UserServices
 
             try
             {
+                
                 //IUserRepository UserRepository=new UserInfrastructure();
                 UserResponseDTO? UserById = await _userRepository.GetById(UserId.Value);
 
@@ -60,6 +61,32 @@ namespace My_Store.Services.UserServices
             {
                 throw new Exception($"The user couldn't be gotten from the database:{Ex.Message}");
             }
+        }
+        public async Task<bool> EmailExists(string Email)
+        {
+            Result<string> EmailForEvaluate = Helper.ToValidateUserEmail(Email);
+            if (!EmailForEvaluate.IsValid)
+            {
+                throw new ArgumentException("The email is null or empty");
+            }
+            try
+            {
+                //IUserRepository UserRepository= new UserInfrastructure();
+                bool ItExists = await _userRepository.EmailExists(EmailForEvaluate.Value);
+
+                if (!ItExists)
+                {
+                    return false;
+                }
+
+                return true;
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occourred: {ex.Message}");
+            }
+
         }
 
 
@@ -93,7 +120,7 @@ namespace My_Store.Services.UserServices
                     throw new ArgumentException("The user is not valid");
                 }
 
-                UserResponseDTO NewUserResponseDTO = await _userRepository.Create(NewUser.Value);
+                UserResponseDTO? NewUserResponseDTO = await _userRepository.Create(NewUser.Value);
 
                 if (NewUserResponseDTO == null)
                 {
@@ -141,7 +168,7 @@ namespace My_Store.Services.UserServices
 
                 //IUserRepository _IUserRepository = new UserInfrastructure();
 
-                UserResponseDTO LoggedUser = await _userRepository.Login(UserToLogIn.Value);
+                UserResponseDTO? LoggedUser = await _userRepository.Login(UserToLogIn.Value);
 
                 if (LoggedUser == null)
                 {
@@ -153,7 +180,6 @@ namespace My_Store.Services.UserServices
             catch (Exception Ex)
             {
                 throw new Exception($"An error occurred:{Ex.Message}");
-                
             }
         }
 
@@ -230,34 +256,6 @@ namespace My_Store.Services.UserServices
             catch (Exception ex)
             {
                 throw new Exception($"An error occourred:{ex.Message}");
-            }
-
-        }
-
-        public async Task<bool> EmailExists(string Email)
-        {
-            Result<string> EmailForEvaluate= Helper.ToValidateUserEmail(Email);
-            if (!EmailForEvaluate.IsValid)
-            {
-                throw new ArgumentException("The email is null or empty");
-            }
-
-            try
-            {
-
-                //IUserRepository UserRepository= new UserInfrastructure();
-                bool ItExists = await _userRepository.EmailExists(EmailForEvaluate.Value);
-
-                if (!ItExists)
-                {
-                    return false;
-                }
-
-                return true;
-
-            }catch (Exception ex)
-            {
-                throw new Exception($"An error occourred: {ex.Message}");
             }
 
         }

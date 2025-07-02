@@ -63,11 +63,11 @@ namespace My_Store.Controllers.User
             try
             {
                 //IUserService UserService= new UserService();    
-                UserResponseDTO User = await _userService.GetById(Id);
+                UserResponseDTO? User = await _userService.GetById(Id);
 
                 if(User == null)
                 {
-                    return  NotFound(); 
+                    return  NotFound($"The user with the ID: {Id} was not found"); 
                 }
                 
                 ActionResult Status = StatusCode(200, User);
@@ -100,7 +100,7 @@ namespace My_Store.Controllers.User
 
                 if (!ItExists)
                 {
-                    Status = StatusCode(404, "The Email does not exists");
+                    Status = StatusCode(404,"The Email does not exists");
                     return Status;
                 }
 
@@ -115,7 +115,11 @@ namespace My_Store.Controllers.User
             
         }
 
+        //Tengo que refactorizar lo de los null y adémás modificar el procedimiento almacenado del getall
+        //Arreglar también lo de program que dice que no se puede inyectar la dependencia o algo así al compilar porque es read only 
 
+        //Quedé en la modificación del procedimiento almacenado, y tengo que modificar la infraestructura, el servicio y el controller para que pueda recibir
+        //la cuenta total de usuarios y tener la paginación.
 
         // POST api/<UserController>
         [HttpPost]
@@ -136,8 +140,12 @@ namespace My_Store.Controllers.User
             try
             {
                 UserResponseDTO NewUser = await _userService.Create(User);
-                ActionResult Status = StatusCode(201,NewUser);
+                if (NewUser == null)
+                {
+                    return BadRequest("The user couldn't be created");
+                }
 
+                ActionResult Status = StatusCode(201,NewUser);
                 return Status;
             }
             catch (Exception ex)
@@ -164,7 +172,7 @@ namespace My_Store.Controllers.User
                 //IUserService _IUserService = new UserService();
                
 
-                UserResponseDTO LoggedUser=await _userService.Login(User);
+                UserResponseDTO? LoggedUser=await _userService.Login(User);
 
                 if(LoggedUser == null)
                 {

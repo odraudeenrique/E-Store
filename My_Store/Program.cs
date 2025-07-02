@@ -18,6 +18,10 @@ builder.Services.AddCors(options =>
     });
 });
 
+//Dependency injection
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IUserRepository, UserInfrastructure>();
+
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -26,12 +30,6 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
-
-
-
-//Dependency injection
-builder.Services.AddScoped<IUserService,UserService>();
-builder.Services.AddScoped<IUserRepository,UserInfrastructure>();
 
 
 // CORS

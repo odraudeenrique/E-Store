@@ -195,6 +195,106 @@ namespace My_Store.Infrastructure.UserInfrastructure
                 }
             }
         }
+
+        public async Task<bool> EmailExists(string Email)
+        {
+            Data.ToSetProcedure("EmailExists");
+            Data.ToSetParameters("@Email", Email);
+
+            try
+            {
+                SqlDataReader Reader = await Data.ToExecuteWithResult();
+
+                if (await Reader.ReadAsync())
+                {
+                    Object? Value = Reader["ItExists"];
+
+                    if (Value is bool Aux)
+                    {
+                        return Aux;
+                    }
+
+                    if (Value is byte B)
+                    {
+                        bool Convertion = (B == 1);
+                        return Convertion;
+                    }
+                    throw new Exception("Unexpected value type received from the database.");
+
+                }
+                throw new Exception("No data returned from the stored procedure.");
+
+            }
+            catch (Exception Ex)
+            {
+                ErrorInfo Error = ErrorInfo.FromException(Ex);
+                ErrorLogger.LogToDatabase(Error);
+                throw;
+            }
+            finally
+            {
+                if (Data != null)
+                {
+                    await Data.DisposeAsync();
+                }
+            }
+        }
+
+
+        public async Task<UserResponseDTO> Create(User User)
+        {
+            try
+            {
+                int RegularUserType = 1;
+                Data.ToSetProcedure("StoredToCreateUser");
+
+                Data.ToSetParameters("@Email", User.Email);
+                Data.ToSetParameters("@Password", User.Password);
+                Data.ToSetParameters("@TypeOfUser", RegularUserType);
+
+                var Reader = await Data.ToExecuteWithResult();
+
+
+                while (await Reader.ReadAsync())
+                {
+                    Result<int> Id = Helper.IsGreaterThanZero((int)Reader["Id"]);
+                    Result<string> Email = Helper.ToValidateString((string)Reader["Email"]);
+                    Result<TypeOfUser> UserType = Helper.GetUserType((int)Reader["TypeOfUser"]);
+
+
+                    if ((!Id.IsValid) || (!Email.IsValid) || (!UserType.IsValid) || (UserType.Value == TypeOfUser.Invalid))
+                    {
+                        return null;
+                    }
+
+                    UserResponseDTO Aux = new UserResponseDTO();
+                    Aux.Id = Id.Value;
+                    Aux.Email = Email.Value;
+                    Aux.UserType = UserType.Value;
+
+                    return Aux;
+                }
+
+                return null;
+            }
+
+            catch (Exception ex)
+            {
+                ErrorInfo Error = ErrorInfo.FromException(ex);
+                ErrorLogger.LogToDatabase(Error);
+                throw;
+            }
+            finally
+            {
+                if (Data != null)
+                {
+                    await Data.DisposeAsync();
+                }
+            }
+        }
+
+
+
         public async Task<UserResponseDTO> Login(User User)
         {
             Data.ToSetProcedure("StoredToLogin");
@@ -242,59 +342,7 @@ namespace My_Store.Infrastructure.UserInfrastructure
 
 
         }
-        public async Task<UserResponseDTO> Create(User User)
-        {
-            try
-            {
-                int RegularUserType = 1;
-                Data.ToSetProcedure("StoredToCreateUser");
-
-                Data.ToSetParameters("@Email", User.Email);
-                Data.ToSetParameters("@Password", User.Password);
-                Data.ToSetParameters("@TypeOfUser", RegularUserType);
-
-                var Reader = await Data.ToExecuteWithResult();
-
-
-                while (await Reader.ReadAsync())
-                {
-                    Result<int> Id = Helper.IsGreaterThanZero((int)Reader["Id"]);
-                    Result<string> Email = Helper.ToValidateString((string)Reader["Email"]);
-                    Result<TypeOfUser> UserType = Helper.GetUserType((int)Reader["TypeOfUser"]);
-
-
-                    if ((!Id.IsValid) || (!Email.IsValid) || (!UserType.IsValid) || (UserType.Value == TypeOfUser.Invalid))
-                    {
-                        return null;
-                    }
-
-                    UserResponseDTO Aux = new UserResponseDTO();
-                    Aux.Id = Id.Value;
-                    Aux.Email = Email.Value;
-                    Aux.UserType = UserType.Value;
-
-                    return Aux;
-
-                }
-
-
-                return null;
-            }
-
-            catch (Exception ex)
-            {
-                ErrorInfo Error = ErrorInfo.FromException(ex);
-                ErrorLogger.LogToDatabase(Error);
-                throw;
-            }
-            finally
-            {
-                if (Data != null)
-                {
-                    await Data.DisposeAsync();
-                }
-            }
-        }
+ 
 
         public async Task<UserResponseDTO?> Patch(User User)
         {
@@ -403,53 +451,6 @@ namespace My_Store.Infrastructure.UserInfrastructure
                 }
             }
         }
-
-        public async Task<bool> EmailExists(string Email)
-        {
-            Data.ToSetProcedure("EmailExists");
-            Data.ToSetParameters("@Email", Email);
-
-            try
-            {
-                SqlDataReader Reader = await Data.ToExecuteWithResult();
-
-                if (await Reader.ReadAsync())
-                {
-                    Object? Value = Reader["ItExists"];
-
-                    if(Value is bool Aux)
-                    {
-                        return Aux;
-                    }
-
-                    if(Value is byte B)
-                    {
-                        bool Convertion = (B == 1);
-                        return Convertion;
-                    }
-                    throw new Exception("Unexpected value type received from the database.");
-                    
-                }
-                throw new Exception("No data returned from the stored procedure.");
-
-            }catch (Exception Ex)
-            {
-                ErrorInfo Error=ErrorInfo.FromException(Ex);
-                ErrorLogger.LogToDatabase(Error);
-                throw;
-            }
-            finally
-            {
-                if(Data != null)
-                {
-                    await Data.DisposeAsync();
-                }
-            }          
-        }
-
-
-
-
 
     }
 }

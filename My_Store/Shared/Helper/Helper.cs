@@ -39,8 +39,6 @@ namespace My_Store.Shared.Helper
 
         public static Result<string> ToValidateString(string Text)
         {
-
-
             if (string.IsNullOrWhiteSpace(Text))
             {
                 return Result<string>.Failed("The string is empty");
@@ -195,7 +193,7 @@ namespace My_Store.Shared.Helper
 
         public static Result<string> ToValidateUserEmail(string Email)
         {
-            Result<string>ValidatedEmail= ToValidateString(Email);
+            Result<string>ValidatedEmail= ToValidateString(Email.ToLower());
             if (!ValidatedEmail.IsValid)
             {
                 return Result<string>.Failed("The email is empty");
