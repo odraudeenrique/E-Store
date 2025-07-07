@@ -6,12 +6,13 @@ using System.IO;
 using My_Store.Shared.Helper;
 using My_Store.Models.UserModels;
 using Microsoft.AspNetCore.Authentication;
+using My_Store.Infrastructure.Interfaces;
 
 
 
 namespace My_Store.Infrastructure.DataAccessInfrastructure
 {
-    public class DataAccess : IAsyncDisposable
+    public class DataAccess : IDataAccess , IAsyncDisposable
     {
         private SqlConnection Connection { get; set; }
         private SqlCommand Command { get; set; }

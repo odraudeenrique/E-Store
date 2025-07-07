@@ -20,12 +20,33 @@ namespace My_Store.Services.UserServices
             _userRepository = UserRepository;
         }
 
-        public async Task<IEnumerable<UserResponseDTO>> GetAll()
+        public async Task<IEnumerable<UserResponseDTO>> GetAll(int Page, int PageSize)
         {
             try
             {
-                //IUserRepository UserRepository = new UserInfrastructure();
-                IEnumerable<UserResponseDTO> Users =await _userRepository.GetAll();
+                Result<int> AuxPage = Helper.IsGreaterThanZero(Page);
+
+
+                if (!AuxPage.IsValid)
+                {
+                    throw new ArgumentException("The page is not valid");
+                }
+
+                Result<int> AuxPageSize = Helper.IsGreaterThanZero(PageSize);
+                if (!AuxPageSize.IsValid)
+                {
+                    throw new ArgumentException("The page size is not valid");
+                }
+
+                int Skip = (AuxPage.Value - 1) * AuxPageSize.Value;
+                int Take = AuxPageSize.Value;
+
+                if (Skip < 0 || Take < 0)
+                {
+                    throw new Exception("The conversition for doing the pagination failed");
+                }
+
+                IEnumerable<UserResponseDTO> Users = await _userRepository.GetAll(Skip,Take);
 
                 return Users;
             }catch (Exception Ex)
@@ -48,7 +69,6 @@ namespace My_Store.Services.UserServices
             try
             {
                 
-                //IUserRepository UserRepository=new UserInfrastructure();
                 UserResponseDTO? UserById = await _userRepository.GetById(UserId.Value);
 
                 if(UserById == null)
@@ -71,7 +91,6 @@ namespace My_Store.Services.UserServices
             }
             try
             {
-                //IUserRepository UserRepository= new UserInfrastructure();
                 bool ItExists = await _userRepository.EmailExists(EmailForEvaluate.Value);
 
                 if (!ItExists)
@@ -166,8 +185,6 @@ namespace My_Store.Services.UserServices
                     throw new ArgumentException("The user is not valid");
                 }
 
-                //IUserRepository _IUserRepository = new UserInfrastructure();
-
                 UserResponseDTO? LoggedUser = await _userRepository.Login(UserToLogIn.Value);
 
                 if (LoggedUser == null)
@@ -242,7 +259,6 @@ namespace My_Store.Services.UserServices
 
             try
             {
-                //IUserRepository Infrastructure = new UserInfrastructure();
                 UserResponseDTO? UpdatedUser = await _userRepository.Patch(Aux);
 
 

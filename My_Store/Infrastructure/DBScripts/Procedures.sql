@@ -7,8 +7,8 @@ CREATE PROCEDURE StoredToInsertError
 @DateCreated Datetime
 AS
 BEGIN
-INSERT INTO ERRORLOGS([Title],[Message],[StackTrace],[Source],[DateCreated])
-VALUES(@Title,@Message,@StackTrace,@Source,GETDATE())
+	INSERT INTO ERRORLOGS([Title],[Message],[StackTrace],[Source],[DateCreated])
+	VALUES(@Title,@Message,@StackTrace,@Source,GETDATE())
 END
 
 
@@ -62,13 +62,14 @@ BEGIN
 	end
 	
 	BEGIN TRY
-		SELECT U.Id, U.Email, U.UserType FROM Users U WHERE @Email=U.Email AND @Password=U.PasswordHash
+		SELECT U.Id, U.Email, U.UserType,U.FirstName,U.LastName,U.Birthday,U.ProfilePicture FROM Users U WHERE @Email=U.Email AND @Password=U.PasswordHash
 	END TRY
 
 	BEGIN CATCH
 		THROW;
 	END CATCH
 END 
+
 
 
 
@@ -105,11 +106,18 @@ END
 
 
 CREATE PROCEDURE GetAll
+@Skip INT=0,
+@Take INT=10 
 as
 BEGIN
 	SET NOCOUNT ON;
 	BEGIN TRY
+		SELECT COUNT(*) AS TotalCount FROM USERS;
+		
 		SELECT U.Id,U.Email,U.UserType,U.FirstName,U.LastName,U.Birthday,U.ProfilePicture FROM Users U
+		ORDER BY U.Id
+		OFFSET @Skip ROWS
+		FETCH NEXT @Take ROWS ONLY;
 	END TRY
 	BEGIN CATCH
 		THROW;

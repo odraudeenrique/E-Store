@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc.Formatters;
+using My_Store.Infrastructure.DataAccessInfrastructure;
 using My_Store.Infrastructure.Interfaces;
 using My_Store.Infrastructure.UserInfrastructure;
 using My_Store.Models.UserModels;
@@ -21,6 +22,7 @@ builder.Services.AddCors(options =>
 //Dependency injection
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserRepository, UserInfrastructure>();
+builder.Services.AddScoped<IDataAccess,DataAccess>();
 
 // Add services to the container.
 

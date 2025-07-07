@@ -27,12 +27,16 @@ namespace My_Store.Controllers.User
 
         //GET api/<UserController>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<UserResponseDTO>>> GetAll()
+        public async Task<ActionResult<IEnumerable<UserResponseDTO>>> GetAll(int Page,int PageSize)
         {
             try
             {
-                //IUserService UserService= new UserService();
-                IEnumerable<UserResponseDTO> Users = await _userService.GetAll();
+                if((Page < 0)||(PageSize<0))
+                {
+                    return BadRequest("The page or the page size is not valid");
+                }
+
+                IEnumerable<UserResponseDTO> Users = await _userService.GetAll(Page,PageSize);
 
                 if (!Users.Any())
                 {
@@ -62,7 +66,6 @@ namespace My_Store.Controllers.User
 
             try
             {
-                //IUserService UserService= new UserService();    
                 UserResponseDTO? User = await _userService.GetById(Id);
 
                 if(User == null)
@@ -93,7 +96,6 @@ namespace My_Store.Controllers.User
             }
             try
             {
-                //IUserService UserService = new UserService();
                 bool ItExists = await _userService.EmailExists(Email);
 
                 ActionResult Status = null;
@@ -114,12 +116,6 @@ namespace My_Store.Controllers.User
             }
             
         }
-
-        //Tengo que refactorizar lo de los null y adémás modificar el procedimiento almacenado del getall
-        //Arreglar también lo de program que dice que no se puede inyectar la dependencia o algo así al compilar porque es read only 
-
-        //Quedé en la modificación del procedimiento almacenado, y tengo que modificar la infraestructura, el servicio y el controller para que pueda recibir
-        //la cuenta total de usuarios y tener la paginación.
 
         // POST api/<UserController>
         [HttpPost]
@@ -155,7 +151,6 @@ namespace My_Store.Controllers.User
             }
         }
 
-
         // POST api/<UserController>
         [HttpPost("Login")]
         public async Task<ActionResult<UserResponseDTO>> Login([FromBody] UserCreateDTO User)
@@ -168,10 +163,7 @@ namespace My_Store.Controllers.User
 
 
             try
-            {
-                //IUserService _IUserService = new UserService();
-               
-
+            {           
                 UserResponseDTO? LoggedUser=await _userService.Login(User);
 
                 if(LoggedUser == null)
@@ -205,7 +197,6 @@ namespace My_Store.Controllers.User
 
             try
             {
-                //IUserService _IUserService=new UserService();
                 UserResponseDTO? UpdatedUser = await _userService.Patch(User); 
                 
                 if(UpdatedUser == null)
@@ -225,6 +216,8 @@ namespace My_Store.Controllers.User
 
         }
 
+
+        //Tengo que agregar un procedimiento para modificar el email, y otro para modificar el tipo de usuario.
 
         [HttpDelete("{id}")]
         public void Delete(int id)

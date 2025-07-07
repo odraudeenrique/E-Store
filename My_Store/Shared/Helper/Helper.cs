@@ -122,14 +122,14 @@ namespace My_Store.Shared.Helper
         {
             if(Aux is null or DBNull)
             {
-                return Result<string?>.Successful(null);
+                return Result<string?>.Failed("The user name is null");
 
             }
 
             string? NameValue=Aux.ToString();
             if (string.IsNullOrWhiteSpace(NameValue))
             {
-                return Result<string?>.Successful(null);
+                return Result<string?>.Failed("The system could not convert the object to user");
             }
 
 
@@ -146,13 +146,13 @@ namespace My_Store.Shared.Helper
         {
             if(Picture is null or DBNull)
             {
-                return Result<string?>.Successful(null);
+                return Result<string?>.Failed("The profile picture is null");
             }
 
             string? PictureValue = Picture.ToString();
             if (string.IsNullOrWhiteSpace(PictureValue))
             {
-                return Result<string?>.Successful(null);
+                return Result<string?>.Failed("The system could not convert the object to string");
             }
             
             if (PictureValue.Length > 500)
@@ -167,7 +167,7 @@ namespace My_Store.Shared.Helper
         {
             if (Date is null or DBNull)
             {
-                return Result<DateTime?>.Successful(null);
+                return Result<DateTime?>.Failed("The birthday is null");
             }
 
             if (Date is not DateTime DateValue)

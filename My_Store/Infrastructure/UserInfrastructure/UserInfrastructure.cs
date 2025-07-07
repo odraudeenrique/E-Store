@@ -12,23 +12,37 @@ namespace My_Store.Infrastructure.UserInfrastructure
 {
     public class UserInfrastructure : IUserRepository
     {
-        private DataAccess _data;
-        private DataAccess Data { get { return this._data; } set { this._data = value; } }
+        private readonly  IDataAccess _data;
+        //private DataAccess Data { get { return this._data; } set { this._data = value; } }
 
-        public UserInfrastructure()
+        public UserInfrastructure(IDataAccess IData)
         {
-            Data = new DataAccess();
+            _data = IData;
         }
 
-        public async Task<IEnumerable<UserResponseDTO>> GetAll()
+        public async Task<IEnumerable<UserResponseDTO>> GetAll(int Skip, int Take)
         {
-            Data.ToSetProcedure("GetAll");
+            _data.ToSetProcedure("GetAll");
             try
             {
-                SqlDataReader Reader= await Data.ToRead();
+                _data.ToSetParameters("@Skip", Skip);
+                _data.ToSetParameters("@Take",Take);
+
+                SqlDataReader Reader= await _data.ToRead();
+
+                int TotalNumberOfUser = 0;
+
+                if (await Reader.ReadAsync())
+                {
+                    TotalNumberOfUser = (int)Reader["TotalCount"];
+                }
+
+                Reader.NextResult();
+
                 List<UserResponseDTO> Users = new List<UserResponseDTO>();
 
-                while (Reader.Read())
+
+                while (await Reader.ReadAsync())
                 {
                     Result<int> UserId = Helper.IsGreaterThanZero((int)Reader["Id"]);
                     Result<string> UserEmail = Helper.ToValidateUserEmail((string)Reader["Email"]);
@@ -99,9 +113,9 @@ namespace My_Store.Infrastructure.UserInfrastructure
             }
             finally
             {
-                if (Data != null)
+                if (_data != null)
                 {
-                    await Data.DisposeAsync();
+                    await _data.DisposeAsync();
                 }
             }
 
@@ -110,12 +124,12 @@ namespace My_Store.Infrastructure.UserInfrastructure
 
         public async Task<UserResponseDTO?> GetById(int Id)
         {
-            Data.ToSetProcedure("GetById");
-            Data.ToSetParameters("@Id", Id);
+            _data.ToSetProcedure("GetById");
+            _data.ToSetParameters("@Id", Id);
 
             try
             {
-                SqlDataReader Reader = await Data.ToRead();
+                SqlDataReader Reader = await _data.ToRead();
 
                 while (await Reader.ReadAsync())
                 {
@@ -189,21 +203,21 @@ namespace My_Store.Infrastructure.UserInfrastructure
             }
             finally
             {
-                if (Data != null)
+                if (_data != null)
                 {
-                    await Data.DisposeAsync();
+                    await _data.DisposeAsync();
                 }
             }
         }
 
         public async Task<bool> EmailExists(string Email)
         {
-            Data.ToSetProcedure("EmailExists");
-            Data.ToSetParameters("@Email", Email);
+            _data.ToSetProcedure("EmailExists");
+            _data.ToSetParameters("@Email", Email);
 
             try
             {
-                SqlDataReader Reader = await Data.ToExecuteWithResult();
+                SqlDataReader Reader = await _data.ToExecuteWithResult();
 
                 if (await Reader.ReadAsync())
                 {
@@ -233,9 +247,9 @@ namespace My_Store.Infrastructure.UserInfrastructure
             }
             finally
             {
-                if (Data != null)
+                if (_data != null)
                 {
-                    await Data.DisposeAsync();
+                    await _data.DisposeAsync();
                 }
             }
         }
@@ -246,13 +260,13 @@ namespace My_Store.Infrastructure.UserInfrastructure
             try
             {
                 int RegularUserType = 1;
-                Data.ToSetProcedure("StoredToCreateUser");
+                _data.ToSetProcedure("StoredToCreateUser");
 
-                Data.ToSetParameters("@Email", User.Email);
-                Data.ToSetParameters("@Password", User.Password);
-                Data.ToSetParameters("@TypeOfUser", RegularUserType);
+                _data.ToSetParameters("@Email", User.Email);
+                _data.ToSetParameters("@Password", User.Password);
+                _data.ToSetParameters("@TypeOfUser", RegularUserType);
 
-                var Reader = await Data.ToExecuteWithResult();
+                var Reader = await _data.ToExecuteWithResult();
 
 
                 while (await Reader.ReadAsync())
@@ -286,9 +300,9 @@ namespace My_Store.Infrastructure.UserInfrastructure
             }
             finally
             {
-                if (Data != null)
+                if (_data != null)
                 {
-                    await Data.DisposeAsync();
+                    await _data.DisposeAsync();
                 }
             }
         }
@@ -297,14 +311,14 @@ namespace My_Store.Infrastructure.UserInfrastructure
 
         public async Task<UserResponseDTO> Login(User User)
         {
-            Data.ToSetProcedure("StoredToLogin");
+            _data.ToSetProcedure("StoredToLogin");
 
-            Data.ToSetParameters("@Email", User.Email);
-            Data.ToSetParameters("@Password", User.Password);
+            _data.ToSetParameters("@Email", User.Email);
+            _data.ToSetParameters("@Password", User.Password);
 
             try
             {
-                SqlDataReader Reader = await Data.ToRead();
+                SqlDataReader Reader = await _data.ToRead();
 
                 while (await Reader.ReadAsync())
                 {
@@ -323,6 +337,47 @@ namespace My_Store.Infrastructure.UserInfrastructure
                     Aux.Email = Email.Value;
                     Aux.UserType = UserType.Value;
 
+                    Result<string?> FirstName = Helper.ToValidateUserName(Reader["FirstName"]);
+                    if((FirstName.IsValid) && (FirstName!=null))
+                    {
+                        Aux.FirstName = FirstName.Value;
+                    }
+                    else
+                    {
+                        Aux.FirstName= null;
+                    }
+
+                    Result<string?> LastName = Helper.ToValidateUserName(Reader["LastName"]);
+                    if((LastName.IsValid) && (LastName != null))
+                    {
+                        Aux.LastName = LastName.Value;
+                    }
+                    else
+                    {
+                        Aux.LastName= null;
+                    }
+
+                    Result<DateTime?> Birthday = Helper.ToValidateUserBirthday(Reader["Birthday"]);
+                    if((Birthday.IsValid) && (Birthday != null))
+                    {
+                        Aux.Birthday = Birthday.Value;
+                    }
+                    else
+                    {
+                        Aux.Birthday= null;
+                    }
+
+                    Result<string?> ProfilePicture = Helper.ToValidateProfilePicture(Reader["ProfilePicture"]);
+                    if((ProfilePicture.IsValid) && (ProfilePicture != null))
+                    {
+                        Aux.ProfilePicture= ProfilePicture.Value;
+                    }
+                    else
+                    {
+                        Aux.ProfilePicture= null;
+                    }
+
+
                     return Aux;
                 }
 
@@ -337,7 +392,7 @@ namespace My_Store.Infrastructure.UserInfrastructure
             }
             finally
             {
-                await Data.DisposeAsync();
+                await _data.DisposeAsync();
             }
 
 
@@ -348,57 +403,57 @@ namespace My_Store.Infrastructure.UserInfrastructure
         {
             try
             {
-                Data.ToSetProcedure("StoredPatchUser");
+                _data.ToSetProcedure("StoredPatchUser");
 
 
                 if (User.Id != null)
                 {
-                    Data.ToSetParameters("@Id", User.Id);
+                    _data.ToSetParameters("@Id", User.Id);
                 }
                 else
                 {
                     throw new ArgumentException("User's Id is missing and it's required");
                 }
 
-
+                
 
                 if (User.FirstName != null)
                 {
-                    Data.ToSetParameters("@FirstName", User.FirstName);
+                    _data.ToSetParameters("@FirstName", User.FirstName);
                 }
                 else
                 {
-                    Data.ToSetParameters("@FirstName", DBNull.Value);
+                    _data.ToSetParameters("@FirstName", DBNull.Value);
                 }
 
                 if (User.LastName != null)
                 {
-                    Data.ToSetParameters("@LastName", User.LastName);
+                    _data.ToSetParameters("@LastName", User.LastName);
                 }
                 else
                 {
-                    Data.ToSetParameters("@LastName", DBNull.Value);
+                    _data.ToSetParameters("@LastName", DBNull.Value);
                 }
 
                 if (User.Birthday != null)
                 {
-                    Data.ToSetParameters("@Birthday", User.Birthday);
+                    _data.ToSetParameters("@Birthday", User.Birthday);
                 }
                 else
                 {
-                    Data.ToSetParameters("@Birthday", DBNull.Value);
+                    _data.ToSetParameters("@Birthday", DBNull.Value);
                 }
 
                 if (User.ProfilePicture != null)
                 {
-                    Data.ToSetParameters("@ProfilePicture", User.ProfilePicture);
+                    _data.ToSetParameters("@ProfilePicture", User.ProfilePicture);
                 }
                 else
                 {
-                    Data.ToSetParameters("@ProfilePicture", DBNull.Value);
+                    _data.ToSetParameters("@ProfilePicture", DBNull.Value);
                 }
 
-                var Reader = await Data.ToExecuteWithResult();
+                var Reader = await _data.ToExecuteWithResult();
 
                 UserResponseDTO UpdatedUser = null;
                 while (await Reader.ReadAsync())
@@ -445,9 +500,9 @@ namespace My_Store.Infrastructure.UserInfrastructure
             }
             finally
             {
-                if (Data != null)
+                if (_data != null)
                 {
-                    await Data.DisposeAsync();
+                    await _data.DisposeAsync();
                 }
             }
         }
