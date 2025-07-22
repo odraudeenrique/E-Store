@@ -47,9 +47,10 @@ namespace My_Store.Infrastructure.UserInfrastructure
                     Result<int> UserId = Helper.IsGreaterThanZero((int)Reader["Id"]);
                     Result<string> UserEmail = Helper.ToValidateUserEmail((string)Reader["Email"]);
                     Result<TypeOfUser> UserType = Helper.GetUserType((int)Reader["UserType"]);
+                    Result<bool> UserActive = Helper.ToValidateActiveUser(Reader["IsActive"]);
 
 
-                    if (((!UserId.IsValid) || (!UserEmail.IsValid) ) || ((!UserType.IsValid) && (UserType.Value!=TypeOfUser.Invalid)))
+                    if (((!UserId.IsValid) || (!UserEmail.IsValid) ) || ((!UserType.IsValid) && (UserType.Value!=TypeOfUser.Invalid)) || (!UserActive.IsValid))
                     {
                         continue;
                     }
@@ -59,6 +60,7 @@ namespace My_Store.Infrastructure.UserInfrastructure
                     Aux.Id=UserId.Value;
                     Aux.Email = UserEmail.Value;
                     Aux.UserType = UserType.Value;
+                    Aux.IsActive= UserActive.Value;
 
                     Result<string?> UserFirstName = Helper.ToValidateUserName(Reader["FirstName"]);
                     if ((UserFirstName.IsValid) && (UserFirstName!=null))
@@ -139,8 +141,9 @@ namespace My_Store.Infrastructure.UserInfrastructure
                     Result<int> UserId = Helper.IsGreaterThanZero((int)Reader["Id"]);
                     Result<string> UserEmail = Helper.ToValidateUserEmail((string)Reader["Email"]);
                     Result<TypeOfUser> UserType = Helper.GetUserType((int)Reader["UserType"]);
+                    Result<bool> UserActive = Helper.ToValidateActiveUser(Reader["IsActive"]);
 
-                    if ((!UserId.IsValid) || (!UserEmail.IsValid) || (!UserType.IsValid))
+                    if ((!UserId.IsValid) || (!UserEmail.IsValid) || (!UserType.IsValid) ||(!UserActive.IsValid))
                     {
                         return null;
                     }
@@ -148,6 +151,7 @@ namespace My_Store.Infrastructure.UserInfrastructure
                     User.Id = UserId.Value;
                     User.Email = UserEmail.Value;
                     User.UserType = UserType.Value;
+                    User.IsActive= UserActive.Value;
 
                     Result<string?> UserFirstName = Helper.ToValidateUserName(Reader["FirstName"]);
                     if ((UserFirstName.IsValid) && (UserFirstName != null))
@@ -213,6 +217,7 @@ namespace My_Store.Infrastructure.UserInfrastructure
         public async Task<bool> EmailExists(string Email)
         {
             _data.ToSetProcedure("EmailExists");
+
             _data.ToSetParameters("@Email", Email);
 
             try
@@ -259,12 +264,11 @@ namespace My_Store.Infrastructure.UserInfrastructure
         {
             try
             {
-                int RegularUserType = 1;
                 _data.ToSetProcedure("StoredToCreateUser");
 
                 _data.ToSetParameters("@Email", User.Email);
                 _data.ToSetParameters("@Password", User.Password);
-                _data.ToSetParameters("@TypeOfUser", RegularUserType);
+                _data.ToSetParameters("@TypeOfUser", User.IsActive);
 
                 var Reader = await _data.ToExecuteWithResult();
 
@@ -274,9 +278,11 @@ namespace My_Store.Infrastructure.UserInfrastructure
                     Result<int> Id = Helper.IsGreaterThanZero((int)Reader["Id"]);
                     Result<string> Email = Helper.ToValidateString((string)Reader["Email"]);
                     Result<TypeOfUser> UserType = Helper.GetUserType((int)Reader["TypeOfUser"]);
+                    Result<bool> UserActive = Helper.ToValidateActiveUser(Reader["IsActive"]);
+                    //Acá tengo que hacer un método que verifique que el usuario sea activo en mi Helper 
 
 
-                    if ((!Id.IsValid) || (!Email.IsValid) || (!UserType.IsValid) || (UserType.Value == TypeOfUser.Invalid))
+                    if ((!Id.IsValid) || (!Email.IsValid) || (!UserType.IsValid) || (UserType.Value == TypeOfUser.Invalid)  || (!UserActive.IsValid))
                     {
                         return null;
                     }
@@ -285,6 +291,7 @@ namespace My_Store.Infrastructure.UserInfrastructure
                     Aux.Id = Id.Value;
                     Aux.Email = Email.Value;
                     Aux.UserType = UserType.Value;
+                    Aux.IsActive= UserActive.Value;
 
                     return Aux;
                 }
@@ -326,8 +333,9 @@ namespace My_Store.Infrastructure.UserInfrastructure
                     Result<int> Id = Helper.IsGreaterThanZero((int)Reader["Id"]);
                     Result<string> Email = Helper.ToValidateString((string)Reader["Email"]);
                     Result<TypeOfUser> UserType = Helper.GetUserType((int)Reader["UserType"]);
+                    Result<bool> UserActive = Helper.ToValidateActiveUser(Reader["IsActive"]);
 
-                    if ((!Id.IsValid) || (!Email.IsValid) || (!UserType.IsValid) || (UserType.Value == TypeOfUser.Invalid))
+                    if ((!Id.IsValid) || (!Email.IsValid) || (!UserType.IsValid) || (UserType.Value == TypeOfUser.Invalid)|| (!UserActive.IsValid))
                     {
                         return null;
                     }
@@ -336,6 +344,7 @@ namespace My_Store.Infrastructure.UserInfrastructure
                     Aux.Id = Id.Value;
                     Aux.Email = Email.Value;
                     Aux.UserType = UserType.Value;
+                    Aux.IsActive = UserActive.Value;
 
                     Result<string?> FirstName = Helper.ToValidateUserName(Reader["FirstName"]);
                     if((FirstName.IsValid) && (FirstName!=null))
@@ -461,10 +470,11 @@ namespace My_Store.Infrastructure.UserInfrastructure
                     Result<int> UserId = Helper.IsGreaterThanZero((int)Reader["Id"]);
                     Result<string> UserEmail = Helper.ToValidateUserEmail((string)Reader["Email"]);
                     Result<TypeOfUser> UserType = Helper.GetUserType((int)Reader["UserType"]);
+                    Result<bool> UserActive = Helper.ToValidateActiveUser(Reader["IsActive"]);
 
 
                     UpdatedUser = new UserResponseDTO();
-                    if ((!UserId.IsValid) || (!UserEmail.IsValid) || (!UserType.IsValid))
+                    if ((!UserId.IsValid) || (!UserEmail.IsValid) || (!UserType.IsValid) ||(!UserActive.IsValid))
                     {
                         return null;
                     }
@@ -472,6 +482,7 @@ namespace My_Store.Infrastructure.UserInfrastructure
                     UpdatedUser.Id = UserId.Value;
                     UpdatedUser.Email = UserEmail.Value;
                     UpdatedUser.UserType = UserType.Value;
+                    UpdatedUser.IsActive=UserActive.Value;
 
                     Result<string?> UserFirstName = Helper.ToValidateUserName(Reader["FirstName"]);
                     UpdatedUser.FirstName = ((UserFirstName.IsValid) && (UserFirstName.Value != null)) ? UserFirstName.Value : null;

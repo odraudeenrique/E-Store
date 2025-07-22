@@ -21,26 +21,30 @@ namespace My_Store.Models.UserModels
         public string? LastName { get; set; }
         public DateTime? Birthday { get; set; }
         public string? ProfilePicture { get; set; } 
+        public bool IsActive {  get; set; }  
         
 
         public User()
         {
 
-        }  
+        }
 
+
+        //I need to work on the CreateAdmin 
         public static Result<User> Create(string AuxEmail, string AuxPassword)
         {
-            Result<(string Email, string Password)> ValidatedUserCredentials = Helper.ToValidateUserCredentials(AuxEmail, AuxPassword);
 
-            if (!ValidatedUserCredentials.IsValid)
+            if ((string.IsNullOrWhiteSpace(AuxEmail)) || (string.IsNullOrWhiteSpace(AuxPassword)))
             {
                 return Result<User>.Failed("The credentials are not valid");
             }
 
             User NewUser = new User
             {
-                Email = ValidatedUserCredentials.Value.Email,
-                Password = ValidatedUserCredentials.Value.Password
+                Email = AuxEmail,
+                Password = AuxPassword,
+                UserType=TypeOfUser.Regular,
+                IsActive = true
             };
 
             return Result<User>.Successful(NewUser);

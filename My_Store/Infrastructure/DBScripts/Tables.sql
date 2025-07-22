@@ -14,6 +14,7 @@ CREATE TABLE Users(
 	LastName NVARCHAR (100) NULL,
 	Birthdate Date NULL,
 	ProfilePicture NVARCHAR (500) NULL,
-	USERTYPE INT NOT NULL-- 1:Regular,2:Admin,3:Master
+	UserTypes INT NOT NULL,-- 1:Regular,2:Admin,3:Master
+	IsActive BIT NOT NULL
 	)
 

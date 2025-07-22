@@ -117,6 +117,10 @@ namespace My_Store.Controllers.User
             
         }
 
+
+        //Ahora tengo que cambiar todos los métodos para agregar el campo IsActive. Hay que refactorizar
+
+
         // POST api/<UserController>
         [HttpPost]
         public async Task<ActionResult<UserResponseDTO>> Create([FromBody] UserCreateDTO User)
@@ -189,6 +193,8 @@ namespace My_Store.Controllers.User
         [HttpPatch]
         public async Task<ActionResult<UserResponseDTO?>> Patch([FromBody]UserUpdateDTO User)
         {
+            //Acá debería modificar el procedimiento para también mandarle si es un usuario activo y así prevengo que un 
+            //usuario inactivo modifique los campos. 
             if(User == null)
             {
                 ActionResult Status = BadRequest("The user is null");

@@ -271,6 +271,35 @@ namespace My_Store.Shared.Helper
             }
         }
 
+            public static Result<bool> ToValidateActiveUser(object ActiveUser)
+            {
+                if(ActiveUser is bool Aux)
+                {
+                    if (!Aux)
+                    {
+                        // The user is not active
+                        return Result<bool>.Successful(Aux);
+                    }
+                    // The user is  active
+                    return Result<bool>.Successful(Aux);
+                }
+
+                if(ActiveUser is byte B)
+                {
+                    //bool AuxBool= B!=0;
+                    bool AuxBool=Convert.ToBoolean(B); 
+                    if (!AuxBool)
+                    {
+                        // The user is not active
+                        return Result<bool>.Successful(AuxBool);
+                    }
+                    // The user is not active
+                    return Result<bool>.Successful(AuxBool);
+                }
+
+                return Result<bool>.Failed("Invalid active user value");
+            }
+
 
     }
 }

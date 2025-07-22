@@ -192,6 +192,9 @@ namespace My_Store.Services.UserServices
                     throw new ArgumentException("The user is not valid");
                 }
 
+                //Acá tengo que llamar al token jwt y tengo que ver si coloco esa propiedadad en el UserResponseDTO o creo un nuevo DTO
+                //para el logged user. 
+
                 return LoggedUser;
             }
             catch (Exception Ex)

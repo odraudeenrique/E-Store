@@ -16,16 +16,23 @@ END
 CREATE PROCEDURE StoredToCreateUser
 @Email NVARCHAR(255),
 @Password NVARCHAR(44),
-@TypeOfUser INT
+@TypeOfUser INT,
+@IsActive BIT=1
 AS
 BEGIN
 	SET NOCOUNT  ON;
-	IF @Email IS NULL OR @Password IS NULL OR @TypeOfUser IS NULL
+
+	IF @Email IS NULL OR @Password IS NULL OR @TypeOfUser IS NULL 
 	BEGIN 
 		RAISERROR('Missing required parameters',16,1);
 		RETURN;
 	END
 	
+	IF @IsActive IS NULL
+	BEGIN
+		SET @IsActive = 1;
+	END
+
 	IF EXISTS(SELECT 1 FROM Users WHERE EMAIL=@Email)
 	BEGIN
 		RAISERROR('The user already exists',16,1);
@@ -33,15 +40,20 @@ BEGIN
 	END
 
 	BEGIN TRY
-		INSERT INTO Users([Email],[PasswordHash],[UserType])
-		VALUES (@Email,@Password,@TypeOfUser);
+		INSERT INTO Users([Email],[PasswordHash],[UserType],[IsActive])
+		VALUES (@Email,@Password,@TypeOfUser,@IsActive);
 
 		DECLARE @NewId INT=SCOPE_IDENTITY();
 
 		SELECT 
 			@NewId as Id,
 			@Email as Email,
-			@TypeOfUser as TypeOfUser;
+			@TypeOfUser as TypeOfUser,
+			NULL AS FirstName,
+			NULL AS LastName,
+			Null AS Birthday,
+			NULL AS ProfilePicture,
+			@IsActive as IsActive;
 	END TRY
 
 	BEGIN CATCH
@@ -62,7 +74,7 @@ BEGIN
 	end
 	
 	BEGIN TRY
-		SELECT U.Id, U.Email, U.UserType,U.FirstName,U.LastName,U.Birthday,U.ProfilePicture FROM Users U WHERE @Email=U.Email AND @Password=U.PasswordHash
+		SELECT U.Id, U.Email, U.UserType,U.FirstName,U.LastName,U.Birthday,U.ProfilePicture,u.ISActive FROM Users U WHERE @Email=U.Email AND @Password=U.PasswordHash
 	END TRY
 
 	BEGIN CATCH
@@ -96,7 +108,7 @@ BEGIN
 		PROFILEPICTURE=ISNULL(@ProfilePicture,ProfilePicture)
 		WHERE Id=@Id;
 
-	SELECT U.Id,U.Email,U.UserType,U.FirstName,U.LastName,U.Birthday,U.ProfilePicture FROM Users U WHERE U.Id=@Id;
+	SELECT U.Id,U.Email,U.UserType,U.FirstName,U.LastName,U.Birthday,U.ProfilePicture,U.ISActive FROM Users U WHERE U.Id=@Id;
 
 	END TRY
 	BEGIN CATCH
@@ -114,7 +126,7 @@ BEGIN
 	BEGIN TRY
 		SELECT COUNT(*) AS TotalCount FROM USERS;
 		
-		SELECT U.Id,U.Email,U.UserType,U.FirstName,U.LastName,U.Birthday,U.ProfilePicture FROM Users U
+		SELECT U.Id,U.Email,U.UserType,U.FirstName,U.LastName,U.Birthday,U.ProfilePicture,U.ISActive FROM Users U
 		ORDER BY U.Id
 		OFFSET @Skip ROWS
 		FETCH NEXT @Take ROWS ONLY;
@@ -130,7 +142,7 @@ CREATE PROCEDURE GetById
 as
 BEGIN
 	BEGIN TRY
-		SELECT U.Id,U.Email,U.UserType,U.FirstName,U.LastName,U.Birthday,U.ProfilePicture FROM Users U WHERE Id=@Id
+		SELECT U.Id,U.Email,U.UserType,U.FirstName,U.LastName,U.Birthday,U.ProfilePicture,U.ISActive FROM Users U WHERE Id=@Id
 	END TRY
 	BEGIN CATCH
 		THROW;
