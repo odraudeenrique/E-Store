@@ -519,5 +519,10 @@ namespace My_Store.Infrastructure.UserInfrastructure
             }
         }
 
+        public async Task<UserResponseDTO>UpdateEmail(UserUpdateDTO User)
+        {
+            return null;
+        }
+
     }
 }

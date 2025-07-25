@@ -10,5 +10,6 @@ namespace My_Store.Services.Interfaces
         Task<UserResponseDTO> Login(UserCreateDTO User);
         Task<UserResponseDTO?> Patch(UserUpdateDTO User);
         Task<bool> EmailExists(string Email);
+        Task<UserResponseDTO> UpdateEmail(UserUpdateDTO User);
     }
 }

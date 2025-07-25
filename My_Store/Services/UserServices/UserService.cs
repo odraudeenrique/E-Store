@@ -290,5 +290,12 @@ namespace My_Store.Services.UserServices
 
         }
 
+        public async Task<UserResponseDTO> UpdateEmail(UserUpdateDTO User)
+        {
+
+
+            return null;
+        }
+
     }
 }

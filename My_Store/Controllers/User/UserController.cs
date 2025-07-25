@@ -7,11 +7,14 @@ using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using My_Store.Services.Interfaces;
+using System.Data.Common;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 //Me queda agregar los métodos para modificar email y el de modificar TypeOfUser sólo siendo administrador o master. 
 //Tengo que arreglar toda la documentación de los métodos del usuario. 
+//También tengo que crear los métodos del administrador
+
 namespace My_Store.Controllers.User
 {
     [Route("api/[controller]")]
@@ -82,7 +85,6 @@ namespace My_Store.Controllers.User
                 ActionResult Status = StatusCode(500, $"Internal Error: {Ex.Message}");
                 return Status;  
             }
-
 
         }
 
@@ -222,6 +224,38 @@ namespace My_Store.Controllers.User
             }
 
         }
+        //Patch / api/<UserController>
+        [HttpPatch("UpdateEmail")]
+        public async Task<ActionResult<UserResponseDTO>> UpdateEmail([FromBody]UserUpdateDTO User )
+        {
+            if(User == null)
+            {
+                ActionResult Status = BadRequest("The user is null");
+                return Status;
+            }
+
+            try
+            {
+                UserResponseDTO UpdateUserEmail = await _userService.UpdateEmail(User);
+
+                ActionResult Status = null;
+                if(UpdateUserEmail == null)
+                {
+                    Status = BadRequest("The user's email is not updated");
+                    return Status;  
+                }
+
+                Status = StatusCode(200, UpdateUserEmail);
+                return Status;
+            }
+            catch (Exception Ex)
+            {
+                ActionResult Status = StatusCode(500, $"Internal server error: {Ex.Message}");
+                return Status ; 
+            }
+        }
+       
+
 
 
         //Tengo que agregar un procedimiento para modificar el email, y otro para modificar el tipo de usuario.
