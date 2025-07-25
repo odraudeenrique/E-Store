@@ -216,6 +216,7 @@ namespace My_Store.Services.UserServices
             Result<int> ValidatedUserId = Helper.IsGreaterThanZero(UserDTO.Id);
             Result<string> ValidatedUserEmail = Helper.ToValidateUserEmail(UserDTO.Email);
             Result<TypeOfUser> ValidatedUserType = Helper.ToValidateUserType(UserDTO.UserType);
+            Result<bool> ValidatedIsActiveUser = Helper.ToValidateActiveUser(UserDTO.IsActive);
 
             if (!ValidatedUserId.IsValid)
             {
@@ -230,11 +231,21 @@ namespace My_Store.Services.UserServices
             {
                 throw new ArgumentException("The user's type is null or not valid");
             }
+            if (!(ValidatedIsActiveUser.IsValid))
+            {
+                throw new ArgumentException("The IsActive field is not valid");
+            }
+
+            if (!ValidatedIsActiveUser.Value)
+            {
+                throw new ArgumentException("Only an active user can modify a field");
+            }
 
             User Aux = new User();
             Aux.Id = ValidatedUserId.Value;
             Aux.Email = ValidatedUserEmail.Value;
             Aux.UserType = ValidatedUserType.Value;
+            Aux.IsActive=ValidatedIsActiveUser.Value;
 
             Result<string?> ValidatedFirstName = Helper.ToValidateUserName(UserDTO.FirstName);
             if (ValidatedFirstName.Value!=null)
@@ -267,14 +278,14 @@ namespace My_Store.Services.UserServices
 
                 if (UpdatedUser == null)
                 {
-                    throw new ArgumentException("The user couldn't be update");
+                    throw new ArgumentException("The user couldn't be updated");
                 }
 
                 return UpdatedUser;
             }
             catch (Exception ex)
             {
-                throw new Exception($"An error occourred:{ex.Message}");
+                throw new Exception($"An error occourred while updating the user:{ex.Message}");
             }
 
         }

@@ -12,7 +12,7 @@ namespace My_Store.Infrastructure.UserInfrastructure
 {
     public class UserInfrastructure : IUserRepository
     {
-        private readonly  IDataAccess _data;
+        private readonly IDataAccess _data;
         //private DataAccess Data { get { return this._data; } set { this._data = value; } }
 
         public UserInfrastructure(IDataAccess IData)
@@ -26,9 +26,9 @@ namespace My_Store.Infrastructure.UserInfrastructure
             try
             {
                 _data.ToSetParameters("@Skip", Skip);
-                _data.ToSetParameters("@Take",Take);
+                _data.ToSetParameters("@Take", Take);
 
-                SqlDataReader Reader= await _data.ToRead();
+                SqlDataReader Reader = await _data.ToRead();
 
                 int TotalNumberOfUser = 0;
 
@@ -50,20 +50,20 @@ namespace My_Store.Infrastructure.UserInfrastructure
                     Result<bool> UserActive = Helper.ToValidateActiveUser(Reader["IsActive"]);
 
 
-                    if (((!UserId.IsValid) || (!UserEmail.IsValid) ) || ((!UserType.IsValid) && (UserType.Value!=TypeOfUser.Invalid)) || (!UserActive.IsValid))
+                    if (((!UserId.IsValid) || (!UserEmail.IsValid)) || ((!UserType.IsValid) && (UserType.Value != TypeOfUser.Invalid)) || (!UserActive.IsValid))
                     {
                         continue;
                     }
 
-                    UserResponseDTO Aux= new UserResponseDTO();
+                    UserResponseDTO Aux = new UserResponseDTO();
 
-                    Aux.Id=UserId.Value;
+                    Aux.Id = UserId.Value;
                     Aux.Email = UserEmail.Value;
                     Aux.UserType = UserType.Value;
-                    Aux.IsActive= UserActive.Value;
+                    Aux.IsActive = UserActive.Value;
 
                     Result<string?> UserFirstName = Helper.ToValidateUserName(Reader["FirstName"]);
-                    if ((UserFirstName.IsValid) && (UserFirstName!=null))
+                    if ((UserFirstName.IsValid) && (UserFirstName != null))
                     {
                         Aux.FirstName = UserFirstName.Value;
                     }
@@ -83,7 +83,7 @@ namespace My_Store.Infrastructure.UserInfrastructure
                     }
 
                     Result<DateTime?> UserBirthday = Helper.ToValidateUserBirthday(Reader["Birthday"]);
-                    if ((UserBirthday.IsValid) && (UserBirthday!=null))
+                    if ((UserBirthday.IsValid) && (UserBirthday != null))
                     {
                         Aux.Birthday = UserBirthday.Value;
                     }
@@ -93,9 +93,9 @@ namespace My_Store.Infrastructure.UserInfrastructure
                     }
 
                     Result<string?> UserProfilePicture = Helper.ToValidateProfilePicture(Reader["ProfilePicture"]);
-                    if ((UserProfilePicture.IsValid) && (UserProfilePicture!=null))
+                    if ((UserProfilePicture.IsValid) && (UserProfilePicture != null))
                     {
-                        Aux.ProfilePicture=UserProfilePicture.Value;
+                        Aux.ProfilePicture = UserProfilePicture.Value;
                     }
                     else
                     {
@@ -107,9 +107,10 @@ namespace My_Store.Infrastructure.UserInfrastructure
 
                 return Users;
 
-            }catch (Exception ex)
+            }
+            catch (Exception ex)
             {
-                ErrorInfo Error=ErrorInfo.FromException(ex);
+                ErrorInfo Error = ErrorInfo.FromException(ex);
                 ErrorLogger.LogToDatabase(Error);
                 throw;
             }
@@ -143,7 +144,7 @@ namespace My_Store.Infrastructure.UserInfrastructure
                     Result<TypeOfUser> UserType = Helper.GetUserType((int)Reader["UserType"]);
                     Result<bool> UserActive = Helper.ToValidateActiveUser(Reader["IsActive"]);
 
-                    if ((!UserId.IsValid) || (!UserEmail.IsValid) || (!UserType.IsValid) ||(!UserActive.IsValid))
+                    if ((!UserId.IsValid) || (!UserEmail.IsValid) || (!UserType.IsValid) || (!UserActive.IsValid))
                     {
                         return null;
                     }
@@ -151,7 +152,7 @@ namespace My_Store.Infrastructure.UserInfrastructure
                     User.Id = UserId.Value;
                     User.Email = UserEmail.Value;
                     User.UserType = UserType.Value;
-                    User.IsActive= UserActive.Value;
+                    User.IsActive = UserActive.Value;
 
                     Result<string?> UserFirstName = Helper.ToValidateUserName(Reader["FirstName"]);
                     if ((UserFirstName.IsValid) && (UserFirstName != null))
@@ -282,7 +283,7 @@ namespace My_Store.Infrastructure.UserInfrastructure
                     //Acá tengo que hacer un método que verifique que el usuario sea activo en mi Helper 
 
 
-                    if ((!Id.IsValid) || (!Email.IsValid) || (!UserType.IsValid) || (UserType.Value == TypeOfUser.Invalid)  || (!UserActive.IsValid))
+                    if ((!Id.IsValid) || (!Email.IsValid) || (!UserType.IsValid) || (UserType.Value == TypeOfUser.Invalid) || (!UserActive.IsValid))
                     {
                         return null;
                     }
@@ -291,7 +292,7 @@ namespace My_Store.Infrastructure.UserInfrastructure
                     Aux.Id = Id.Value;
                     Aux.Email = Email.Value;
                     Aux.UserType = UserType.Value;
-                    Aux.IsActive= UserActive.Value;
+                    Aux.IsActive = UserActive.Value;
 
                     return Aux;
                 }
@@ -335,7 +336,7 @@ namespace My_Store.Infrastructure.UserInfrastructure
                     Result<TypeOfUser> UserType = Helper.GetUserType((int)Reader["UserType"]);
                     Result<bool> UserActive = Helper.ToValidateActiveUser(Reader["IsActive"]);
 
-                    if ((!Id.IsValid) || (!Email.IsValid) || (!UserType.IsValid) || (UserType.Value == TypeOfUser.Invalid)|| (!UserActive.IsValid))
+                    if ((!Id.IsValid) || (!Email.IsValid) || (!UserType.IsValid) || (UserType.Value == TypeOfUser.Invalid) || (!UserActive.IsValid))
                     {
                         return null;
                     }
@@ -347,43 +348,43 @@ namespace My_Store.Infrastructure.UserInfrastructure
                     Aux.IsActive = UserActive.Value;
 
                     Result<string?> FirstName = Helper.ToValidateUserName(Reader["FirstName"]);
-                    if((FirstName.IsValid) && (FirstName!=null))
+                    if ((FirstName.IsValid) && (FirstName != null))
                     {
                         Aux.FirstName = FirstName.Value;
                     }
                     else
                     {
-                        Aux.FirstName= null;
+                        Aux.FirstName = null;
                     }
 
                     Result<string?> LastName = Helper.ToValidateUserName(Reader["LastName"]);
-                    if((LastName.IsValid) && (LastName != null))
+                    if ((LastName.IsValid) && (LastName != null))
                     {
                         Aux.LastName = LastName.Value;
                     }
                     else
                     {
-                        Aux.LastName= null;
+                        Aux.LastName = null;
                     }
 
                     Result<DateTime?> Birthday = Helper.ToValidateUserBirthday(Reader["Birthday"]);
-                    if((Birthday.IsValid) && (Birthday != null))
+                    if ((Birthday.IsValid) && (Birthday != null))
                     {
                         Aux.Birthday = Birthday.Value;
                     }
                     else
                     {
-                        Aux.Birthday= null;
+                        Aux.Birthday = null;
                     }
 
                     Result<string?> ProfilePicture = Helper.ToValidateProfilePicture(Reader["ProfilePicture"]);
-                    if((ProfilePicture.IsValid) && (ProfilePicture != null))
+                    if ((ProfilePicture.IsValid) && (ProfilePicture != null))
                     {
-                        Aux.ProfilePicture= ProfilePicture.Value;
+                        Aux.ProfilePicture = ProfilePicture.Value;
                     }
                     else
                     {
-                        Aux.ProfilePicture= null;
+                        Aux.ProfilePicture = null;
                     }
 
 
@@ -406,7 +407,7 @@ namespace My_Store.Infrastructure.UserInfrastructure
 
 
         }
- 
+
 
         public async Task<UserResponseDTO?> Patch(User User)
         {
@@ -424,7 +425,6 @@ namespace My_Store.Infrastructure.UserInfrastructure
                     throw new ArgumentException("User's Id is missing and it's required");
                 }
 
-                
 
                 if (User.FirstName != null)
                 {
@@ -462,6 +462,7 @@ namespace My_Store.Infrastructure.UserInfrastructure
                     _data.ToSetParameters("@ProfilePicture", DBNull.Value);
                 }
 
+
                 var Reader = await _data.ToExecuteWithResult();
 
                 UserResponseDTO UpdatedUser = null;
@@ -474,7 +475,7 @@ namespace My_Store.Infrastructure.UserInfrastructure
 
 
                     UpdatedUser = new UserResponseDTO();
-                    if ((!UserId.IsValid) || (!UserEmail.IsValid) || (!UserType.IsValid) ||(!UserActive.IsValid))
+                    if ((!UserId.IsValid) || (!UserEmail.IsValid) || (!UserType.IsValid) || (!UserActive.IsValid))
                     {
                         return null;
                     }
@@ -482,7 +483,7 @@ namespace My_Store.Infrastructure.UserInfrastructure
                     UpdatedUser.Id = UserId.Value;
                     UpdatedUser.Email = UserEmail.Value;
                     UpdatedUser.UserType = UserType.Value;
-                    UpdatedUser.IsActive=UserActive.Value;
+                    UpdatedUser.IsActive = UserActive.Value;
 
                     Result<string?> UserFirstName = Helper.ToValidateUserName(Reader["FirstName"]);
                     UpdatedUser.FirstName = ((UserFirstName.IsValid) && (UserFirstName.Value != null)) ? UserFirstName.Value : null;

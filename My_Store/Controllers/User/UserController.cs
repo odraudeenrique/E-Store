@@ -10,6 +10,8 @@ using My_Store.Services.Interfaces;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
+//Me queda agregar los métodos para modificar email y el de modificar TypeOfUser sólo siendo administrador o master. 
+//Tengo que arreglar toda la documentación de los métodos del usuario. 
 namespace My_Store.Controllers.User
 {
     [Route("api/[controller]")]
@@ -193,8 +195,7 @@ namespace My_Store.Controllers.User
         [HttpPatch]
         public async Task<ActionResult<UserResponseDTO?>> Patch([FromBody]UserUpdateDTO User)
         {
-            //Acá debería modificar el procedimiento para también mandarle si es un usuario activo y así prevengo que un 
-            //usuario inactivo modifique los campos. 
+            
             if(User == null)
             {
                 ActionResult Status = BadRequest("The user is null");

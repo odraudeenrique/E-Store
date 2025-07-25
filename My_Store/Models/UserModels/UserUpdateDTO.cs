@@ -14,5 +14,7 @@ namespace My_Store.Models.UserModels
         public string? LastName { get; set; }
         public DateTime? Birthday { get; set; }
         public string? ProfilePicture { get; set; }
+        [Required]
+        public bool IsActive{get; set; }
     }
 }
